@@ -5,6 +5,9 @@ import com.slack.api.model.block.composition.ConfirmationDialogBuilder
 import com.slack.api.model.block.composition.ConfirmationDialogObject
 import com.slack.api.model.block.composition.PlainTextObject
 
+/**
+ * Builder for a Channel Select block element
+ */
 @SlackAPIBuilder
 class ChannelsSelectBuilder(
         private val initialChannel: String?,

@@ -6,6 +6,9 @@ import com.slack.api.model.block.composition.PlainTextObject
 import com.slack.api.model.block.composition.SingleTextObjectContainerImpl
 import com.slack.api.model.block.composition.TextObjectContainer
 
+/**
+ * Builder for a single option in a checkbox, select, etc.
+ */
 @SlackAPIBuilder
 class OptionBuilder(
         private val value: String?,

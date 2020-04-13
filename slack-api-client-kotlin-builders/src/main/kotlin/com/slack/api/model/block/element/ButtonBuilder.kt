@@ -5,6 +5,9 @@ import com.slack.api.SlackAPIBuilder
 import com.slack.api.model.block.composition.ConfirmationDialogObject
 import com.slack.api.model.block.composition.PlainTextObject
 
+/**
+ * Builder for a button block element
+ */
 @SlackAPIBuilder
 class ButtonBuilder(
         private val actionID: String?,

@@ -2,6 +2,9 @@ package com.slack.api.model.block.composition
 
 import com.slack.api.SlackAPIBuilder
 
+/**
+ * Builder for a Confirmation Dialog
+ */
 @SlackAPIBuilder
 class ConfirmationDialogBuilder : TextObjectContainer {
     private val objectContainerImpl = SingleTextObjectContainerImpl()
