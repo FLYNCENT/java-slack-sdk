@@ -1,7 +1,6 @@
-package com.slack.api
+package com.slack.api.model.block.composition
 
-import com.slack.api.model.block.composition.ConfirmationDialogObject
-import com.slack.api.model.block.composition.PlainTextObject
+import com.slack.api.SlackAPIBuilder
 
 @SlackAPIBuilder
 class ConfirmationDialogBuilder : TextObjectContainer {
