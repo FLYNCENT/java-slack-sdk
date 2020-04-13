@@ -15,9 +15,10 @@ import lombok.NoArgsConstructor;
 public class OptionObject {
 
     /**
-     * The formatting to use for this text object. Can be one of plain_text or mrkdwn.
+     * The formatting to use for this text object. Overflows, selects, and multi-selects can
+     * only use text here. Checkboxes and radio buttons can use both plain text and markdown.
      */
-    private PlainTextObject text;
+    private TextObject text;
 
     /**
      * The text for the block. This field accepts any of the standard text formatting markup when type is mrkdwn.
