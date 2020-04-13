@@ -5,6 +5,9 @@ import com.slack.api.model.block.composition.ConfirmationDialogBuilder
 import com.slack.api.model.block.composition.ConfirmationDialogObject
 import com.slack.api.model.block.composition.OptionObject
 
+/**
+ * Builder for a checkboxes block element.
+ */
 @SlackAPIBuilder
 class CheckboxesBuilder(
         private val actionID: String?

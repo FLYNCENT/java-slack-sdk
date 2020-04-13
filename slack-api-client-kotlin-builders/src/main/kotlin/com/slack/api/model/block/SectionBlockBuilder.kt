@@ -3,19 +3,25 @@ package com.slack.api.model.block
 import com.slack.api.*
 import com.slack.api.model.block.composition.MultiTextObjectContainerImpl
 import com.slack.api.model.block.composition.SingleTextObjectContainerImpl
+import com.slack.api.model.block.composition.TextObject
 import com.slack.api.model.block.composition.TextObjectContainer
 import com.slack.api.model.block.element.*
 
+/**
+ * Builder for a section block element.
+ */
 @SlackAPIBuilder
 class SectionBlockBuilder(
         private val blockID: String?
 ) : TextObjectContainer, BlockElementContainer {
+    // Need to separate "fields" and "fieldsDelegate" because the delegate makes the list non-null by default
+    private var fields: MutableList<TextObject>? = null
     private val fieldsDelegate = MultiTextObjectContainerImpl()
     private val textContentDelegate = SingleTextObjectContainerImpl()
     private val accessoryDelegate = SingleBlockElementContainerImpl()
 
     fun fields(buildFields: TextObjectContainer.() -> Unit) {
-        fieldsDelegate.buildFields()
+        fields = fieldsDelegate.apply(buildFields).addedTextObjects
     }
 
     override fun plainText(text: String, emoji: Boolean?) = textContentDelegate.plainText(text, emoji)
@@ -28,6 +34,6 @@ class SectionBlockBuilder(
             accessoryDelegate.channelsSelect(initialChannel, actionID, responseURLEnabled, buildChannelsSelect)
 
     fun build(): SectionBlock {
-        return SectionBlock(textContentDelegate.constructedTextObject, blockID, fieldsDelegate.addedTextObjects, accessoryDelegate.constructedBlockElement)
+        return SectionBlock(textContentDelegate.constructedTextObject, blockID, fields, accessoryDelegate.constructedBlockElement)
     }
 }
