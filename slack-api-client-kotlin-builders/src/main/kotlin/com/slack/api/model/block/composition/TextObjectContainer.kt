@@ -1,8 +1,6 @@
-package com.slack.api
+package com.slack.api.model.block.composition
 
-import com.slack.api.model.block.composition.MarkdownTextObject
-import com.slack.api.model.block.composition.PlainTextObject
-import com.slack.api.model.block.composition.TextObject
+import com.slack.api.SlackAPIBuilder
 
 @SlackAPIBuilder
 interface TextObjectContainer {

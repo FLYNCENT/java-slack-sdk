@@ -1,8 +1,9 @@
-package com.slack.api
+package com.slack.api.model.block.element
 
+import com.slack.api.model.block.composition.ConfirmationDialogBuilder
+import com.slack.api.SlackAPIBuilder
 import com.slack.api.model.block.composition.ConfirmationDialogObject
 import com.slack.api.model.block.composition.PlainTextObject
-import com.slack.api.model.block.element.ButtonElement
 
 @SlackAPIBuilder
 class ButtonBuilder(
