@@ -14,6 +14,7 @@
     <modules>
         <module>slack-api-client</module>
         <module>slack-api-model</module>
+        <module>slack-api-model-kotlin-extension</module>
         <module>slack-app-backend</module>
         <module>bolt</module>
         <module>bolt-servlet</module>
@@ -24,7 +25,6 @@
         <module>bolt-spring-boot-examples</module>
         <module>bolt-kotlin-examples</module>
         <module>bolt-quarkus-examples</module>
-        <module>slack-api-client-kotlin-builders</module>
     </modules>
 
     <parent>
