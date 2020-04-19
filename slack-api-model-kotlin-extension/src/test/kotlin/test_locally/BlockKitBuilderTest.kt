@@ -28,9 +28,9 @@ class BlockKitBuilderTest {
         divider()
         actions {
           button(
-            actionId = "action-id-value",
-            url = "https://www.google.com",
-            style = ButtonStyle.PRIMARY
+                  actionId = "action-id-value",
+                  url = "https://www.google.com",
+                  style = ButtonStyle.PRIMARY
           ) {
             plainText("Go to Google")
             confirm {
@@ -40,10 +40,7 @@ class BlockKitBuilderTest {
               deny("I'm not sure...")
             }
           }
-          button {
-            actionId("action-id-value")
-            url("https://www.google.com")
-            style(ButtonStyle.PRIMARY)
+          button(actionId = "action-id-value", url = "https://www.google.com", style = ButtonStyle.PRIMARY) {
             plainText("Go to Google")
             confirm {
               title("Confirm Navigation")
@@ -110,10 +107,7 @@ class BlockKitBuilderTest {
           }
           divider()
           actions {
-            button {
-              actionId("action-id-value")
-              url("https://www.google.com")
-              style(ButtonStyle.PRIMARY)
+            button(actionId = "action-id-value", url = "https://www.google.com", style = ButtonStyle.PRIMARY) {
               plainText("Go to Google")
               confirm {
                 title("Confirm Navigation")

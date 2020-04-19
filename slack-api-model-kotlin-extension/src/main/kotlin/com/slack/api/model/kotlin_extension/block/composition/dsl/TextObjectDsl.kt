@@ -8,14 +8,14 @@ import com.slack.api.model.kotlin_extension.block.BlockLayoutBuilder
 @BlockLayoutBuilder
 interface TextObjectDsl {
 
-  /**
-   * Sets plain_text type text object with the given information.
-   */
-  fun plainText(text: String, emoji: Boolean? = null)
+    /**
+     * Sets plain_text type text object with the given information.
+     */
+    fun plainText(text: String, emoji: Boolean? = null)
 
-  /**
-   * Sets mrkdwn type text object with the given information.
-   */
-  fun markdownText(text: String, verbatim: Boolean? = null)
+    /**
+     * Sets mrkdwn type text object with the given information.
+     */
+    fun markdownText(text: String, verbatim: Boolean? = null)
 
 }

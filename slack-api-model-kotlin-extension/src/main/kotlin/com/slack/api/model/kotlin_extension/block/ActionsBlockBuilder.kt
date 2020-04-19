@@ -1,57 +1,22 @@
 package com.slack.api.model.kotlin_extension.block
 
 import com.slack.api.model.block.ActionsBlock
-import com.slack.api.model.block.composition.PlainTextObject
-import com.slack.api.model.kotlin_extension.block.element.*
-import com.slack.api.model.kotlin_extension.block.element.dsl.BlockElementDsl
 import com.slack.api.model.kotlin_extension.block.element.container.MultiBlockElementContainer
+import com.slack.api.model.kotlin_extension.block.element.dsl.BlockElementDsl
 
 // same name with the object + "Builder" suffix
 @BlockLayoutBuilder
-class ActionsBlockBuilder(
-  private var blockId: String?
-) : Builder<ActionsBlock>, BlockElementDsl {
+class ActionsBlockBuilder private constructor(
+        private var blockId: String?,
+        private val elementsContainer: MultiBlockElementContainer
+) : Builder<ActionsBlock>, BlockElementDsl by elementsContainer {
 
-  private val elementsContainer = MultiBlockElementContainer()
+    constructor(blockId: String?) : this(blockId, MultiBlockElementContainer())
 
-  override fun button(
-    actionId: String?,
-    url: String?,
-    value: String?,
-    style: ButtonStyle?,
-    text: PlainTextObject?,
-    builder: ButtonElementBuilder.() -> Unit) {
-    elementsContainer.button(
-      actionId = actionId,
-      url = url,
-      value = value,
-      style = style,
-      builder = builder
-    )
-  }
-
-  override fun checkboxes(
-    actionId: String?,
-    builder:
-    CheckboxesElementBuilder.() -> Unit) {
-    elementsContainer.checkboxes(
-      actionId,
-      builder
-    )
-  }
-
-  override fun channelsSelect(
-    initialChannel: String?,
-    actionId: String?,
-    responseUrlEnabled: Boolean?,
-    builder: ChannelsSelectElementBuilder.() -> Unit) {
-    elementsContainer.channelsSelect(initialChannel, actionId, responseUrlEnabled, builder)
-  }
-
-  override fun build(): ActionsBlock {
-    return ActionsBlock.builder()
-      .blockId(blockId)
-      .elements(elementsContainer.underlying)
-      .build()
-  }
+    override fun build(): ActionsBlock {
+        return ActionsBlock.builder()
+                .blockId(blockId)
+                .elements(this.elementsContainer.underlying)
+                .build()
+    }
 }
