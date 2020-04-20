@@ -6,7 +6,7 @@ import com.slack.api.model.kotlin_extension.block.SectionBlockBuilder
 
 // same name with the object + "Dsl" suffix
 @BlockLayoutBuilder
-interface LayoutBlockDsl {
+interface BlocksDsl {
   fun section(blockId: String? = null, builder: SectionBlockBuilder.() -> Unit)
   fun divider(blockId: String? = null)
   fun actions(blockId: String? = null, builder: ActionsBlockBuilder.() -> Unit)

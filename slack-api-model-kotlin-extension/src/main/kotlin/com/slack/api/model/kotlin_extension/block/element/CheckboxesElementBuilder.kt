@@ -7,6 +7,7 @@ import com.slack.api.model.block.element.CheckboxesElement
 import com.slack.api.model.kotlin_extension.block.Builder
 import com.slack.api.model.kotlin_extension.block.composition.ConfirmationDialogObjectBuilder
 import com.slack.api.model.kotlin_extension.block.element.container.MultiOptionContainer
+import com.slack.api.model.kotlin_extension.block.element.dsl.BlockElementDsl
 import com.slack.api.model.kotlin_extension.block.element.dsl.OptionObjectDsl
 
 // same name with the object + "Builder" suffix
@@ -16,7 +17,11 @@ class CheckboxesElementBuilder(
   private var options: List<OptionObject>? = null,
   private var initialOptions: List<OptionObject>? = null,
   private var confirm: ConfirmationDialogObject? = null
-) : Builder<CheckboxesElement> {
+) : Builder<CheckboxesElement>, BlockElementDsl {
+
+  override fun actionId(actionId: String) {
+    this.actionId = actionId
+  }
 
   fun options(builder: OptionObjectDsl.() -> Unit) {
     options = MultiOptionContainer().apply(builder).options

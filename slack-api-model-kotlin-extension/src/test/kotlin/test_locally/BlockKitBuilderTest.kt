@@ -23,15 +23,16 @@ class BlockKitBuilderTest {
       .text("User did a thing!")
       .blocks(withBlocks {
         section {
+          blockId("section-block-id")
           plainText("This is the text in this section")
         }
         divider()
         actions {
-          button(
-            actionId = "action-id-value",
-            url = "https://www.google.com",
-            style = ButtonStyle.PRIMARY
-          ) {
+          blockId("block-id")
+          button {
+            actionId("action-id-value")
+            url("https://www.google.com")
+            style(ButtonStyle.PRIMARY)
             plainText("Go to Google")
             confirm {
               title("Confirm Navigation")
@@ -40,10 +41,11 @@ class BlockKitBuilderTest {
               deny("I'm not sure...")
             }
           }
-          button {
-            actionId("action-id-value")
-            url("https://www.google.com")
-            style(ButtonStyle.PRIMARY)
+          button(
+            actionId = "action-id-value",
+            url = "https://www.google.com",
+            style = ButtonStyle.PRIMARY
+          ) {
             plainText("Go to Google")
             confirm {
               title("Confirm Navigation")
@@ -60,11 +62,13 @@ class BlockKitBuilderTest {
       .text("User did a thing!")
       .blocks(asBlocks(
         section { thisSection ->
-          thisSection.text(plainText("This is the text in this section"))
+          thisSection.blockId("section-block-id").text(plainText("This is the text in this section"))
         },
         divider(),
         actions { actionsBlock ->
-          actionsBlock.elements(asElements(
+          actionsBlock
+            .blockId("block-id")
+            .elements(asElements(
             javaButton { thisButton ->
               thisButton.actionId("action-id-value")
                 .text(plainText("Go to Google"))
@@ -110,6 +114,7 @@ class BlockKitBuilderTest {
           }
           divider()
           actions {
+            blockId("block-id")
             button {
               actionId("action-id-value")
               url("https://www.google.com")

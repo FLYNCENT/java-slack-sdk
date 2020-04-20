@@ -6,22 +6,28 @@ import com.slack.api.model.block.composition.TextObject
 import com.slack.api.model.kotlin_extension.block.composition.container.MultiTextObjectContainer
 import com.slack.api.model.kotlin_extension.block.composition.container.SingleTextObjectContainer
 import com.slack.api.model.kotlin_extension.block.composition.dsl.TextObjectDsl
+import com.slack.api.model.kotlin_extension.block.dsl.BlockDsl
+import com.slack.api.model.kotlin_extension.block.dsl.BlockFieldsDsl
 import com.slack.api.model.kotlin_extension.block.element.*
-import com.slack.api.model.kotlin_extension.block.element.dsl.BlockElementDsl
+import com.slack.api.model.kotlin_extension.block.element.dsl.BlockElementsDsl
 import com.slack.api.model.kotlin_extension.block.element.container.SingleBlockElementContainer
 
 // same name with the object + "Builder" suffix
 @BlockLayoutBuilder
 class SectionBlockBuilder(
-  private val blockId: String?
-) : Builder<SectionBlock>, TextObjectDsl, BlockElementDsl {
+  private var blockId: String?
+) : Builder<SectionBlock>, BlockDsl, BlockFieldsDsl, TextObjectDsl, BlockElementsDsl {
   // Need to separate "fields" and "fieldsContainer" because the delegate makes the list non-null by default
   private var fields: MutableList<TextObject>? = null
   private val fieldsContainer = MultiTextObjectContainer()
   private val textContainer = SingleTextObjectContainer()
   private val accessoryContainer = SingleBlockElementContainer()
 
-  fun fields(builder: TextObjectDsl.() -> Unit) {
+  override fun blockId(blockId: String) {
+    this.blockId = blockId
+  }
+
+  override fun fields(builder: TextObjectDsl.() -> Unit) {
     fields = fieldsContainer.apply(builder).underlying
   }
 
@@ -75,4 +81,5 @@ class SectionBlockBuilder(
       .text(textContainer.underlying)
       .build()
   }
+
 }

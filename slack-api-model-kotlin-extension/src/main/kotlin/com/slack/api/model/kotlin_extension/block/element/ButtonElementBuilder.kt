@@ -6,6 +6,7 @@ import com.slack.api.model.block.composition.PlainTextObject
 import com.slack.api.model.block.element.ButtonElement
 import com.slack.api.model.kotlin_extension.block.Builder
 import com.slack.api.model.kotlin_extension.block.composition.ConfirmationDialogObjectBuilder
+import com.slack.api.model.kotlin_extension.block.element.dsl.BlockElementDsl
 
 // same name with the object + "Builder" suffix
 @BlockLayoutBuilder
@@ -16,7 +17,7 @@ class ButtonElementBuilder(
   private var style: ButtonStyle? = null,
   private var text: PlainTextObject? = null,
   private var confirm: ConfirmationDialogObject? = null
-) : Builder<ButtonElement> {
+) : Builder<ButtonElement>, BlockElementDsl {
 
   init {
     if (actionId?.length ?: 0 > 255) {
@@ -30,7 +31,7 @@ class ButtonElementBuilder(
     }
   }
 
-  fun actionId(actionId: String) {
+ override fun actionId(actionId: String) {
     this.actionId = actionId
   }
 

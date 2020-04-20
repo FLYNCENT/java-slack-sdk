@@ -3,12 +3,12 @@ package com.slack.api.model.kotlin_extension.block.element.container
 import com.slack.api.model.block.composition.PlainTextObject
 import com.slack.api.model.block.element.BlockElement
 import com.slack.api.model.kotlin_extension.block.element.*
-import com.slack.api.model.kotlin_extension.block.element.dsl.BlockElementDsl
+import com.slack.api.model.kotlin_extension.block.element.dsl.BlockElementsDsl
 
 /**
  * Supports a BlockElementContainer holding exactly one block element
  */
-class SingleBlockElementContainer : BlockElementDsl {
+class SingleBlockElementContainer : BlockElementsDsl {
   var underlying: BlockElement? = null
 
   override fun button(
