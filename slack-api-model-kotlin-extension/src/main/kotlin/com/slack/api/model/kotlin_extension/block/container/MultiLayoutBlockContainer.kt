@@ -12,20 +12,20 @@ import com.slack.api.model.kotlin_extension.block.dsl.LayoutBlockDsl
 class MultiLayoutBlockContainer : LayoutBlockDsl {
     val underlying = mutableListOf<LayoutBlock>()
 
-    override fun section(blockId: String?, builder: SectionBlockBuilder.() -> Unit) {
-        underlying += SectionBlockBuilder(blockId).apply(builder).build()
+    override fun section(builder: SectionBlockBuilder.() -> Unit) {
+        underlying += SectionBlockBuilder().apply(builder).build()
     }
 
     override fun divider(blockId: String?) {
         underlying += DividerBlock(blockId)
     }
 
-    override fun actions(blockId: String?, builder: ActionsBlockBuilder.() -> Unit) {
-        underlying += ActionsBlockBuilder(blockId).apply(builder).build()
+    override fun actions(builder: ActionsBlockBuilder.() -> Unit) {
+        underlying += ActionsBlockBuilder().apply(builder).build()
     }
 
-    override fun context(blockId: String?, builder: ContextBlockBuilder.() -> Unit) {
-        underlying += ContextBlockBuilder(blockId).apply(builder).build()
+    override fun context(builder: ContextBlockBuilder.() -> Unit) {
+        underlying += ContextBlockBuilder().apply(builder).build()
     }
 
     override fun file(blockId: String?, externalId: String?, source: FileSource?) {
@@ -36,15 +36,7 @@ class MultiLayoutBlockContainer : LayoutBlockDsl {
                 .build()
     }
 
-    override fun image(fallback: String?, imageUrl: String?, imageWidth: Int?, imageHeight: Int?, imageBytes: Int?, altText: String?, blockId: String?, builder: ImageBlockBuilder.() -> Unit) {
-        underlying += ImageBlockBuilder(
-                fallback = fallback,
-                imageUrl = imageUrl,
-                imageWidth = imageWidth,
-                imageHeight = imageHeight,
-                imageBytes = imageBytes,
-                altText = altText,
-                blockId = blockId
-        ).apply(builder).build()
+    override fun image(builder: ImageBlockBuilder.() -> Unit) {
+        underlying += ImageBlockBuilder().apply(builder).build()
     }
 }

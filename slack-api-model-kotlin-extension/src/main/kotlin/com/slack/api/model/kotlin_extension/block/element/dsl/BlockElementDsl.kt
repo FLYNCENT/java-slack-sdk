@@ -2,7 +2,6 @@ package com.slack.api.model.kotlin_extension.block.element.dsl
 
 import com.slack.api.model.kotlin_extension.block.BlockLayoutBuilder
 import com.slack.api.model.kotlin_extension.block.element.ButtonElementBuilder
-import com.slack.api.model.kotlin_extension.block.element.ButtonStyle
 import com.slack.api.model.kotlin_extension.block.element.ChannelsSelectElementBuilder
 import com.slack.api.model.kotlin_extension.block.element.CheckboxesElementBuilder
 
@@ -10,23 +9,10 @@ import com.slack.api.model.kotlin_extension.block.element.CheckboxesElementBuild
 @BlockLayoutBuilder
 interface BlockElementDsl {
 
-    fun button(
-            actionId: String? = null,
-            url: String? = null,
-            value: String? = null,
-            style: ButtonStyle? = null,
-            builder: ButtonElementBuilder.() -> Unit
-    )
+    fun button(builder: ButtonElementBuilder.() -> Unit)
 
-    fun checkboxes(
-            actionId: String? = null,
-            builder: CheckboxesElementBuilder.() -> Unit)
+    fun checkboxes(builder: CheckboxesElementBuilder.() -> Unit)
 
-    fun channelsSelect(
-            actionId: String? = null,
-            initialChannel: String? = null,
-            responseUrlEnabled: Boolean? = null,
-            builder: ChannelsSelectElementBuilder.() -> Unit
-    )
+    fun channelsSelect(builder: ChannelsSelectElementBuilder.() -> Unit)
     // TODO add more block elements if the POC is successful
 }

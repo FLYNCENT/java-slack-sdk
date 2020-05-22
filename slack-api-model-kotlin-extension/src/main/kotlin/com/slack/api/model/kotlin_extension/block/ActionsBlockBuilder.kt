@@ -1,22 +1,24 @@
 package com.slack.api.model.kotlin_extension.block
 
 import com.slack.api.model.block.ActionsBlock
+import com.slack.api.model.kotlin_extension.block.container.SingleBlockIdContainer
+import com.slack.api.model.kotlin_extension.block.dsl.BlockIdDsl
 import com.slack.api.model.kotlin_extension.block.element.container.MultiBlockElementContainer
 import com.slack.api.model.kotlin_extension.block.element.dsl.BlockElementDsl
 
 // same name with the object + "Builder" suffix
 @BlockLayoutBuilder
 class ActionsBlockBuilder private constructor(
-        private var blockId: String?,
+        private val blockIdContainer: SingleBlockIdContainer,
         private val elementsContainer: MultiBlockElementContainer
-) : Builder<ActionsBlock>, BlockElementDsl by elementsContainer {
+) : Builder<ActionsBlock>, BlockIdDsl by blockIdContainer, BlockElementDsl by elementsContainer {
 
-    constructor(blockId: String?) : this(blockId, MultiBlockElementContainer())
+    constructor() : this(SingleBlockIdContainer(), MultiBlockElementContainer())
 
     override fun build(): ActionsBlock {
         return ActionsBlock.builder()
-                .blockId(blockId)
-                .elements(this.elementsContainer.underlying)
+                .blockId(blockIdContainer.underlying)
+                .elements(elementsContainer.underlying)
                 .build()
     }
 }
