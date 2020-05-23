@@ -1,6 +1,6 @@
 package com.slack.api.model.kotlin_extension.block.element
 
-import com.slack.api.model.block.element.ChannelsSelectElement
+import com.slack.api.model.block.element.MultiChannelsSelectElement
 import com.slack.api.model.kotlin_extension.block.BlockLayoutBuilder
 import com.slack.api.model.kotlin_extension.block.Builder
 import com.slack.api.model.kotlin_extension.block.composition.container.SingleConfirmationDialogContainer
@@ -10,36 +10,35 @@ import com.slack.api.model.kotlin_extension.block.element.container.SinglePlaceh
 import com.slack.api.model.kotlin_extension.block.element.dsl.ActionIdDsl
 import com.slack.api.model.kotlin_extension.block.element.dsl.PlaceholderDsl
 
-// same name with the object + "Builder" suffix
 @BlockLayoutBuilder
-class ChannelsSelectElementBuilder private constructor(
+class MultiChannelsSelectElementBuilder private constructor(
         private val actionIdContainer: SingleActionIdContainer,
         private val confirmationDialogContainer: SingleConfirmationDialogContainer,
         private val placeholderContainer: SinglePlaceholderContainer
-) : Builder<ChannelsSelectElement>,
+) : Builder<MultiChannelsSelectElement>,
         ActionIdDsl by actionIdContainer,
         ConfirmationDialogDsl by confirmationDialogContainer,
         PlaceholderDsl by placeholderContainer {
-    private var initialChannel: String? = null
-    private var responseUrlEnabled: Boolean? = null
+    private var initialChannels: List<String>? = null
+    private var maxSelectedItems: Int? = null
 
     constructor() : this(SingleActionIdContainer(), SingleConfirmationDialogContainer(), SinglePlaceholderContainer())
 
-    fun initialChannel(channel: String) {
-        initialChannel = channel
+    fun initialChannels(vararg channels: String) {
+        initialChannels = channels.toList()
     }
 
-    fun responseUrlEnabled(enabled: Boolean) {
-        responseUrlEnabled = enabled
+    fun maxSelectedItems(maxItems: Int) {
+        maxSelectedItems = maxItems
     }
 
-    override fun build(): ChannelsSelectElement {
-        return ChannelsSelectElement.builder()
-                .actionId(actionIdContainer.underlying)
+    override fun build(): MultiChannelsSelectElement {
+        return MultiChannelsSelectElement.builder()
                 .placeholder(placeholderContainer.underlying)
-                .initialChannel(initialChannel)
+                .actionId(actionIdContainer.underlying)
+                .initialChannels(initialChannels)
                 .confirm(confirmationDialogContainer.underlying)
-                .responseUrlEnabled(responseUrlEnabled)
+                .maxSelectedItems(maxSelectedItems)
                 .build()
     }
 }

@@ -1,6 +1,6 @@
 package com.slack.api.model.kotlin_extension.block.element
 
-import com.slack.api.model.block.element.ChannelsSelectElement
+import com.slack.api.model.block.element.DatePickerElement
 import com.slack.api.model.kotlin_extension.block.BlockLayoutBuilder
 import com.slack.api.model.kotlin_extension.block.Builder
 import com.slack.api.model.kotlin_extension.block.composition.container.SingleConfirmationDialogContainer
@@ -10,36 +10,29 @@ import com.slack.api.model.kotlin_extension.block.element.container.SinglePlaceh
 import com.slack.api.model.kotlin_extension.block.element.dsl.ActionIdDsl
 import com.slack.api.model.kotlin_extension.block.element.dsl.PlaceholderDsl
 
-// same name with the object + "Builder" suffix
 @BlockLayoutBuilder
-class ChannelsSelectElementBuilder private constructor(
+class DatePickerElementBuilder private constructor(
         private val actionIdContainer: SingleActionIdContainer,
         private val confirmationDialogContainer: SingleConfirmationDialogContainer,
         private val placeholderContainer: SinglePlaceholderContainer
-) : Builder<ChannelsSelectElement>,
+) : Builder<DatePickerElement>,
         ActionIdDsl by actionIdContainer,
         ConfirmationDialogDsl by confirmationDialogContainer,
         PlaceholderDsl by placeholderContainer {
-    private var initialChannel: String? = null
-    private var responseUrlEnabled: Boolean? = null
+    private var initialDate: String? = null
 
     constructor() : this(SingleActionIdContainer(), SingleConfirmationDialogContainer(), SinglePlaceholderContainer())
 
-    fun initialChannel(channel: String) {
-        initialChannel = channel
+    fun initialDate(date: String) {
+        initialDate = date
     }
 
-    fun responseUrlEnabled(enabled: Boolean) {
-        responseUrlEnabled = enabled
-    }
-
-    override fun build(): ChannelsSelectElement {
-        return ChannelsSelectElement.builder()
+    override fun build(): DatePickerElement {
+        return DatePickerElement.builder()
                 .actionId(actionIdContainer.underlying)
                 .placeholder(placeholderContainer.underlying)
-                .initialChannel(initialChannel)
+                .initialDate(initialDate)
                 .confirm(confirmationDialogContainer.underlying)
-                .responseUrlEnabled(responseUrlEnabled)
                 .build()
     }
 }

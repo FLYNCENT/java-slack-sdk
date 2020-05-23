@@ -1,6 +1,7 @@
 package com.slack.api.model.kotlin_extension.block.element
 
-import com.slack.api.model.block.element.ChannelsSelectElement
+import com.slack.api.model.block.element.ConversationsFilter
+import com.slack.api.model.block.element.ConversationsSelectElement
 import com.slack.api.model.kotlin_extension.block.BlockLayoutBuilder
 import com.slack.api.model.kotlin_extension.block.Builder
 import com.slack.api.model.kotlin_extension.block.composition.container.SingleConfirmationDialogContainer
@@ -10,36 +11,45 @@ import com.slack.api.model.kotlin_extension.block.element.container.SinglePlaceh
 import com.slack.api.model.kotlin_extension.block.element.dsl.ActionIdDsl
 import com.slack.api.model.kotlin_extension.block.element.dsl.PlaceholderDsl
 
-// same name with the object + "Builder" suffix
 @BlockLayoutBuilder
-class ChannelsSelectElementBuilder private constructor(
+class ConversationsSelectElementBuilder private constructor(
         private val actionIdContainer: SingleActionIdContainer,
         private val confirmationDialogContainer: SingleConfirmationDialogContainer,
         private val placeholderContainer: SinglePlaceholderContainer
-) : Builder<ChannelsSelectElement>,
+) : Builder<ConversationsSelectElement>,
         ActionIdDsl by actionIdContainer,
         ConfirmationDialogDsl by confirmationDialogContainer,
         PlaceholderDsl by placeholderContainer {
-    private var initialChannel: String? = null
+    private var initialConversation: String? = null
     private var responseUrlEnabled: Boolean? = null
+    private var conversationsFilter: ConversationsFilter? = null
 
     constructor() : this(SingleActionIdContainer(), SingleConfirmationDialogContainer(), SinglePlaceholderContainer())
 
-    fun initialChannel(channel: String) {
-        initialChannel = channel
+    fun initialConversation(conversation: String) {
+        initialConversation = conversation
     }
 
     fun responseUrlEnabled(enabled: Boolean) {
         responseUrlEnabled = enabled
     }
 
-    override fun build(): ChannelsSelectElement {
-        return ChannelsSelectElement.builder()
-                .actionId(actionIdContainer.underlying)
+    fun conversationsFilter(vararg include: ConversationType, excludeExternalSharedChannels: Boolean = false, excludeBotUsers: Boolean = false) {
+        conversationsFilter = ConversationsFilter.builder()
+                .include(include.map { it.value })
+                .excludeExternalSharedChannels(excludeExternalSharedChannels)
+                .excludeBotUsers(excludeBotUsers)
+                .build()
+    }
+
+    override fun build(): ConversationsSelectElement {
+        return ConversationsSelectElement.builder()
                 .placeholder(placeholderContainer.underlying)
-                .initialChannel(initialChannel)
+                .actionId(actionIdContainer.underlying)
+                .initialConversation(initialConversation)
                 .confirm(confirmationDialogContainer.underlying)
                 .responseUrlEnabled(responseUrlEnabled)
+                .filter(conversationsFilter)
                 .build()
     }
 }

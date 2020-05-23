@@ -1,8 +1,8 @@
-package com.slack.api.model.kotlin_extension.block.element.container
+package com.slack.api.model.kotlin_extension.block.composition.container
 
 import com.slack.api.model.block.composition.OptionObject
-import com.slack.api.model.kotlin_extension.block.element.OptionObjectBuilder
-import com.slack.api.model.kotlin_extension.block.element.dsl.OptionObjectDsl
+import com.slack.api.model.kotlin_extension.block.composition.OptionObjectBuilder
+import com.slack.api.model.kotlin_extension.block.composition.dsl.OptionObjectDsl
 
 /**
  * Supports an OptionContainer that can have one to many options.

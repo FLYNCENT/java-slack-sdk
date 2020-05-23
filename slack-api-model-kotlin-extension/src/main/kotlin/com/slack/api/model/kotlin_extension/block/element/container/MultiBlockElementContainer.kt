@@ -1,9 +1,8 @@
 package com.slack.api.model.kotlin_extension.block.element.container
 
 import com.slack.api.model.block.element.BlockElement
-import com.slack.api.model.kotlin_extension.block.element.ButtonElementBuilder
-import com.slack.api.model.kotlin_extension.block.element.ChannelsSelectElementBuilder
-import com.slack.api.model.kotlin_extension.block.element.CheckboxesElementBuilder
+import com.slack.api.model.block.element.ImageElement
+import com.slack.api.model.kotlin_extension.block.element.*
 import com.slack.api.model.kotlin_extension.block.element.dsl.BlockElementDsl
 
 /**
@@ -22,5 +21,44 @@ class MultiBlockElementContainer : BlockElementDsl {
 
     override fun channelsSelect(builder: ChannelsSelectElementBuilder.() -> Unit) {
         underlying += ChannelsSelectElementBuilder().apply(builder).build()
+    }
+
+    override fun conversationsSelect(builder: ConversationsSelectElementBuilder.() -> Unit) {
+        underlying += ConversationsSelectElementBuilder().apply(builder).build()
+    }
+
+    override fun datePicker(builder: DatePickerElementBuilder.() -> Unit) {
+        underlying += DatePickerElementBuilder().apply(builder).build()
+    }
+
+    override fun externalSelect(builder: ExternalSelectElementBuilder.() -> Unit) {
+        underlying += ExternalSelectElementBuilder().apply(builder).build()
+    }
+
+    override fun image(imageUrl: String?, altText: String?, fallback: String?, imageWidth: Int?, imageHeight: Int?, imageBytes: Int?) {
+        underlying += ImageElement.builder()
+                .imageUrl(imageUrl)
+                .altText(altText)
+                .fallback(fallback)
+                .imageWidth(imageWidth)
+                .imageHeight(imageHeight)
+                .imageBytes(imageBytes)
+                .build()
+    }
+
+    override fun multiChannelsSelect(builder: MultiChannelsSelectElementBuilder.() -> Unit) {
+        underlying += MultiChannelsSelectElementBuilder().apply(builder).build()
+    }
+
+    override fun multiConversationsSelect(builder: MultiConversationsSelectElementBuilder.() -> Unit) {
+        underlying += MultiConversationsSelectElementBuilder().apply(builder).build()
+    }
+
+    override fun multiExternalSelect(builder: MultiExternalSelectElementBuilder.() -> Unit) {
+        underlying += MultiExternalSelectElementBuilder().apply(builder).build()
+    }
+
+    override fun multiStaticSelect(builder: MultiStaticSelectElementBuilder.() -> Unit) {
+        underlying += MultiStaticSelectElementBuilder().apply(builder).build()
     }
 }

@@ -1,4 +1,4 @@
-package com.slack.api.model.kotlin_extension.block.element
+package com.slack.api.model.kotlin_extension.block.composition
 
 import com.slack.api.model.block.composition.OptionObject
 import com.slack.api.model.block.composition.PlainTextObject
