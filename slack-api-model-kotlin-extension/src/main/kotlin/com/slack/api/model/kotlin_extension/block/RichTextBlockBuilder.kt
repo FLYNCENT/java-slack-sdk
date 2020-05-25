@@ -12,6 +12,10 @@ class RichTextBlockBuilder private constructor(
 
     constructor() : this(MultiBlockElementContainer())
 
+    fun blockId(id: String) {
+        blockId = id
+    }
+
     override fun build(): RichTextBlock {
         return RichTextBlock.builder()
                 .elements(elementsContainer.underlying)
