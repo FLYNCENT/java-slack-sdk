@@ -12,16 +12,40 @@ class MultiRichTextElementContainer : RichTextElementDsl {
         underlying += RichTextElementTextBuilder().apply(builder).build()
     }
 
+    override fun text(value: String) {
+        underlying += RichTextElementTextBuilder().apply {
+            text(value)
+        }.build()
+    }
+
     override fun channel(builder: RichTextElementChannelBuilder.() -> Unit) {
         underlying += RichTextElementChannelBuilder().apply(builder).build()
+    }
+
+    override fun channel(channelId: String) {
+        underlying += RichTextElementChannelBuilder().apply {
+            channelId(channelId)
+        }.build()
     }
 
     override fun user(builder: RichTextElementUserBuilder.() -> Unit) {
         underlying += RichTextElementUserBuilder().apply(builder).build()
     }
 
+    override fun user(userId: String) {
+        underlying += RichTextElementUserBuilder().apply {
+            userId(userId)
+        }.build()
+    }
+
     override fun emoji(builder: RichTextElementEmojiBuilder.() -> Unit) {
         underlying += RichTextElementEmojiBuilder().apply(builder).build()
+    }
+
+    override fun emoji(emojiName: String) {
+        underlying += RichTextElementEmojiBuilder().apply {
+            name(emojiName)
+        }.build()
     }
 
     override fun link(builder: RichTextElementLinkBuilder.() -> Unit) {
@@ -30,6 +54,12 @@ class MultiRichTextElementContainer : RichTextElementDsl {
 
     override fun team(builder: RichTextElementTeamBuilder.() -> Unit) {
         underlying += RichTextElementTeamBuilder().apply(builder).build()
+    }
+
+    override fun team(teamId: String) {
+        underlying += RichTextElementTeamBuilder().apply {
+            teamId(teamId)
+        }.build()
     }
 
     override fun usergroup(usergroupId: String) {
