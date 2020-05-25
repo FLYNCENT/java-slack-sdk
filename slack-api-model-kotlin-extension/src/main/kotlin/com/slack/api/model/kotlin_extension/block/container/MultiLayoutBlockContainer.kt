@@ -39,4 +39,12 @@ class MultiLayoutBlockContainer : LayoutBlockDsl {
     override fun image(builder: ImageBlockBuilder.() -> Unit) {
         underlying += ImageBlockBuilder().apply(builder).build()
     }
+
+    override fun input(builder: InputBlockBuilder.() -> Unit) {
+        underlying += InputBlockBuilder().apply(builder).build()
+    }
+
+    override fun richText(builder: RichTextBlockBuilder.() -> Unit) {
+        underlying += RichTextBlockBuilder().apply(builder).build()
+    }
 }

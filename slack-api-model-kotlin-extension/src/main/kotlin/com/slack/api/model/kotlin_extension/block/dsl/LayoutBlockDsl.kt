@@ -11,4 +11,6 @@ interface LayoutBlockDsl {
     fun context(builder: ContextBlockBuilder.() -> Unit)
     fun file(blockId: String? = null, externalId: String? = null, source: FileSource? = null)
     fun image(builder: ImageBlockBuilder.() -> Unit)
+    fun input(builder: InputBlockBuilder.() -> Unit)
+    fun richText(builder: RichTextBlockBuilder.() -> Unit)
 }
