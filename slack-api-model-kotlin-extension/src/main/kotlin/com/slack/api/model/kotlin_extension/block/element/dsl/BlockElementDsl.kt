@@ -1,7 +1,10 @@
 package com.slack.api.model.kotlin_extension.block.element.dsl
 
 import com.slack.api.model.kotlin_extension.block.BlockLayoutBuilder
-import com.slack.api.model.kotlin_extension.block.element.*
+import com.slack.api.model.kotlin_extension.block.element.ButtonElementBuilder
+import com.slack.api.model.kotlin_extension.block.element.CheckboxesElementBuilder
+import com.slack.api.model.kotlin_extension.block.element.OverflowMenuElementBuilder
+import com.slack.api.model.kotlin_extension.block.element.RadioButtonsElementBuilder
 
 // same name with the object + "Dsl" suffix
 @BlockLayoutBuilder

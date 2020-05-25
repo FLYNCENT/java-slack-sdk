@@ -2,10 +2,10 @@ package com.slack.api.model.kotlin_extension.block.element
 
 import com.slack.api.model.block.composition.ConfirmationDialogObject
 import com.slack.api.model.block.composition.PlainTextObject
+import com.slack.api.model.block.element.MultiUsersSelectElement
 import com.slack.api.model.kotlin_extension.block.BlockLayoutBuilder
 import com.slack.api.model.kotlin_extension.block.Builder
 import com.slack.api.model.kotlin_extension.block.composition.ConfirmationDialogObjectBuilder
-import com.slack.api.model.block.element.MultiUsersSelectElement
 
 @BlockLayoutBuilder
 class MultiUsersSelectElementBuilder : Builder<MultiUsersSelectElement> {
