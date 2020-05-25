@@ -1,29 +1,28 @@
 package com.slack.api.model.kotlin_extension.block.element
 
+import com.slack.api.model.block.composition.ConfirmationDialogObject
+import com.slack.api.model.block.composition.PlainTextObject
 import com.slack.api.model.block.element.ChannelsSelectElement
 import com.slack.api.model.kotlin_extension.block.BlockLayoutBuilder
 import com.slack.api.model.kotlin_extension.block.Builder
-import com.slack.api.model.kotlin_extension.block.composition.container.SingleConfirmationDialogContainer
-import com.slack.api.model.kotlin_extension.block.composition.dsl.ConfirmationDialogDsl
-import com.slack.api.model.kotlin_extension.block.element.container.SingleActionIdContainer
-import com.slack.api.model.kotlin_extension.block.element.container.SinglePlaceholderContainer
-import com.slack.api.model.kotlin_extension.block.element.dsl.ActionIdDsl
-import com.slack.api.model.kotlin_extension.block.element.dsl.PlaceholderDsl
+import com.slack.api.model.kotlin_extension.block.composition.ConfirmationDialogObjectBuilder
 
 // same name with the object + "Builder" suffix
 @BlockLayoutBuilder
-class ChannelsSelectElementBuilder private constructor(
-        private val actionIdContainer: SingleActionIdContainer,
-        private val confirmationDialogContainer: SingleConfirmationDialogContainer,
-        private val placeholderContainer: SinglePlaceholderContainer
-) : Builder<ChannelsSelectElement>,
-        ActionIdDsl by actionIdContainer,
-        ConfirmationDialogDsl by confirmationDialogContainer,
-        PlaceholderDsl by placeholderContainer {
+class ChannelsSelectElementBuilder : Builder<ChannelsSelectElement> {
+    private var placeholder: PlainTextObject? = null
+    private var actionId: String? = null
     private var initialChannel: String? = null
     private var responseUrlEnabled: Boolean? = null
+    private var confirm: ConfirmationDialogObject? = null
 
-    constructor() : this(SingleActionIdContainer(), SingleConfirmationDialogContainer(), SinglePlaceholderContainer())
+    fun placeholder(text: String, emoji: Boolean? = null) {
+        placeholder = PlainTextObject(text, emoji)
+    }
+
+    fun actionId(id: String) {
+        actionId = id
+    }
 
     fun initialChannel(channel: String) {
         initialChannel = channel
@@ -33,12 +32,16 @@ class ChannelsSelectElementBuilder private constructor(
         responseUrlEnabled = enabled
     }
 
+    fun confirm(builder: ConfirmationDialogObjectBuilder.() -> Unit) {
+        confirm = ConfirmationDialogObjectBuilder().apply(builder).build()
+    }
+
     override fun build(): ChannelsSelectElement {
         return ChannelsSelectElement.builder()
-                .actionId(actionIdContainer.underlying)
-                .placeholder(placeholderContainer.underlying)
+                .actionId(actionId)
+                .placeholder(placeholder)
                 .initialChannel(initialChannel)
-                .confirm(confirmationDialogContainer.underlying)
+                .confirm(confirm)
                 .responseUrlEnabled(responseUrlEnabled)
                 .build()
     }

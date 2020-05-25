@@ -1,28 +1,27 @@
 package com.slack.api.model.kotlin_extension.block.element
 
+import com.slack.api.model.block.composition.ConfirmationDialogObject
+import com.slack.api.model.block.composition.PlainTextObject
 import com.slack.api.model.block.element.MultiChannelsSelectElement
 import com.slack.api.model.kotlin_extension.block.BlockLayoutBuilder
 import com.slack.api.model.kotlin_extension.block.Builder
-import com.slack.api.model.kotlin_extension.block.composition.container.SingleConfirmationDialogContainer
-import com.slack.api.model.kotlin_extension.block.composition.dsl.ConfirmationDialogDsl
-import com.slack.api.model.kotlin_extension.block.element.container.SingleActionIdContainer
-import com.slack.api.model.kotlin_extension.block.element.container.SinglePlaceholderContainer
-import com.slack.api.model.kotlin_extension.block.element.dsl.ActionIdDsl
-import com.slack.api.model.kotlin_extension.block.element.dsl.PlaceholderDsl
+import com.slack.api.model.kotlin_extension.block.composition.ConfirmationDialogObjectBuilder
 
 @BlockLayoutBuilder
-class MultiChannelsSelectElementBuilder private constructor(
-        private val actionIdContainer: SingleActionIdContainer,
-        private val confirmationDialogContainer: SingleConfirmationDialogContainer,
-        private val placeholderContainer: SinglePlaceholderContainer
-) : Builder<MultiChannelsSelectElement>,
-        ActionIdDsl by actionIdContainer,
-        ConfirmationDialogDsl by confirmationDialogContainer,
-        PlaceholderDsl by placeholderContainer {
+class MultiChannelsSelectElementBuilder : Builder<MultiChannelsSelectElement> {
+    private var placeholder: PlainTextObject? = null
+    private var actionId: String? = null
     private var initialChannels: List<String>? = null
     private var maxSelectedItems: Int? = null
+    private var confirm: ConfirmationDialogObject? = null
 
-    constructor() : this(SingleActionIdContainer(), SingleConfirmationDialogContainer(), SinglePlaceholderContainer())
+    fun placeholder(text: String, emoji: Boolean? = null) {
+        placeholder = PlainTextObject(text, emoji)
+    }
+
+    fun actionId(id: String) {
+        actionId = id
+    }
 
     fun initialChannels(vararg channels: String) {
         initialChannels = channels.toList()
@@ -32,12 +31,16 @@ class MultiChannelsSelectElementBuilder private constructor(
         maxSelectedItems = maxItems
     }
 
+    fun confirm(builder: ConfirmationDialogObjectBuilder.() -> Unit) {
+        confirm = ConfirmationDialogObjectBuilder().apply(builder).build()
+    }
+
     override fun build(): MultiChannelsSelectElement {
         return MultiChannelsSelectElement.builder()
-                .placeholder(placeholderContainer.underlying)
-                .actionId(actionIdContainer.underlying)
+                .placeholder(placeholder)
+                .actionId(actionId)
                 .initialChannels(initialChannels)
-                .confirm(confirmationDialogContainer.underlying)
+                .confirm(confirm)
                 .maxSelectedItems(maxSelectedItems)
                 .build()
     }

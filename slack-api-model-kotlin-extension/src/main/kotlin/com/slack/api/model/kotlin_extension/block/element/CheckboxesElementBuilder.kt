@@ -1,26 +1,25 @@
 package com.slack.api.model.kotlin_extension.block.element
 
+import com.slack.api.model.block.composition.ConfirmationDialogObject
 import com.slack.api.model.block.composition.OptionObject
 import com.slack.api.model.block.element.CheckboxesElement
 import com.slack.api.model.kotlin_extension.block.BlockLayoutBuilder
 import com.slack.api.model.kotlin_extension.block.Builder
+import com.slack.api.model.kotlin_extension.block.composition.ConfirmationDialogObjectBuilder
 import com.slack.api.model.kotlin_extension.block.composition.container.MultiOptionContainer
-import com.slack.api.model.kotlin_extension.block.composition.container.SingleConfirmationDialogContainer
-import com.slack.api.model.kotlin_extension.block.composition.dsl.ConfirmationDialogDsl
 import com.slack.api.model.kotlin_extension.block.composition.dsl.OptionObjectDsl
-import com.slack.api.model.kotlin_extension.block.element.container.SingleActionIdContainer
-import com.slack.api.model.kotlin_extension.block.element.dsl.ActionIdDsl
 
 // same name with the object + "Builder" suffix
 @BlockLayoutBuilder
-class CheckboxesElementBuilder private constructor(
-        private val actionIdContainer: SingleActionIdContainer,
-        private val confirmationDialogContainer: SingleConfirmationDialogContainer
-) : Builder<CheckboxesElement>, ActionIdDsl by actionIdContainer, ConfirmationDialogDsl by confirmationDialogContainer {
+class CheckboxesElementBuilder : Builder<CheckboxesElement> {
+    private var actionId: String? = null
     private var options: List<OptionObject>? = null
     private var initialOptions: List<OptionObject>? = null
+    private var confirm: ConfirmationDialogObject? = null
 
-    constructor() : this(SingleActionIdContainer(), SingleConfirmationDialogContainer())
+    fun actionId(id: String) {
+        actionId = id
+    }
 
     fun options(builder: OptionObjectDsl.() -> Unit) {
         options = MultiOptionContainer().apply(builder).underlying
@@ -30,12 +29,16 @@ class CheckboxesElementBuilder private constructor(
         initialOptions = MultiOptionContainer().apply(builder).underlying
     }
 
+    fun confirm(builder: ConfirmationDialogObjectBuilder.() -> Unit) {
+        confirm = ConfirmationDialogObjectBuilder().apply(builder).build()
+    }
+
     override fun build(): CheckboxesElement {
         return CheckboxesElement.builder()
-                .actionId(actionIdContainer.underlying)
+                .actionId(actionId)
                 .options(options)
                 .initialOptions(initialOptions)
-                .confirm(confirmationDialogContainer.underlying)
+                .confirm(confirm)
                 .build()
     }
 }

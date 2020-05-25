@@ -5,8 +5,6 @@ import com.slack.api.model.block.composition.TextObject
 import com.slack.api.model.kotlin_extension.block.composition.container.MultiTextObjectContainer
 import com.slack.api.model.kotlin_extension.block.composition.container.SingleTextObjectContainer
 import com.slack.api.model.kotlin_extension.block.composition.dsl.TextObjectDsl
-import com.slack.api.model.kotlin_extension.block.container.SingleBlockIdContainer
-import com.slack.api.model.kotlin_extension.block.dsl.BlockIdDsl
 import com.slack.api.model.kotlin_extension.block.element.container.SingleBlockElementContainer
 import com.slack.api.model.kotlin_extension.block.element.dsl.BlockElementDsl
 
@@ -14,23 +12,25 @@ import com.slack.api.model.kotlin_extension.block.element.dsl.BlockElementDsl
 @BlockLayoutBuilder
 class SectionBlockBuilder private constructor(
         private val textContainer: SingleTextObjectContainer,
-        private val accessoryContainer: SingleBlockElementContainer,
-        private val blockIdContainer: SingleBlockIdContainer
-) : Builder<SectionBlock>, TextObjectDsl by textContainer, BlockElementDsl by accessoryContainer, BlockIdDsl by blockIdContainer {
-
-    constructor() : this(SingleTextObjectContainer(), SingleBlockElementContainer(), SingleBlockIdContainer())
-
+        private val accessoryContainer: SingleBlockElementContainer
+) : Builder<SectionBlock>, TextObjectDsl by textContainer, BlockElementDsl by accessoryContainer {
+    private var blockId: String? = null
     // Need to separate "fields" and "fieldsContainer" because the delegate makes the list non-null by default
-    private var fields: MutableList<TextObject>? = null
-    private val fieldsContainer = MultiTextObjectContainer()
+    private var fields: List<TextObject>? = null
+
+    constructor() : this(SingleTextObjectContainer(), SingleBlockElementContainer())
+
+    fun blockId(id: String) {
+        blockId = id
+    }
 
     fun fields(builder: TextObjectDsl.() -> Unit) {
-        fields = fieldsContainer.apply(builder).underlying
+        fields = MultiTextObjectContainer().apply(builder).underlying
     }
 
     override fun build(): SectionBlock {
         return SectionBlock.builder()
-                .blockId(blockIdContainer.underlying)
+                .blockId(blockId)
                 .fields(fields)
                 .accessory(accessoryContainer.underlying)
                 .text(textContainer.underlying)

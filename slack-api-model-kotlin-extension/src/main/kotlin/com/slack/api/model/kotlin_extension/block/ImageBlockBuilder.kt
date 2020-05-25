@@ -2,13 +2,10 @@ package com.slack.api.model.kotlin_extension.block
 
 import com.slack.api.model.block.ImageBlock
 import com.slack.api.model.block.composition.PlainTextObject
-import com.slack.api.model.kotlin_extension.block.container.SingleBlockIdContainer
-import com.slack.api.model.kotlin_extension.block.dsl.BlockIdDsl
 
 @BlockLayoutBuilder
-class ImageBlockBuilder private constructor(
-        private val blockIdBuilder: SingleBlockIdContainer
-) : Builder<ImageBlock>, BlockIdDsl by blockIdBuilder {
+class ImageBlockBuilder : Builder<ImageBlock> {
+    private var blockId: String? = null
     private var title: PlainTextObject? = null
     private var fallback: String? = null
     private var imageUrl: String? = null
@@ -17,7 +14,9 @@ class ImageBlockBuilder private constructor(
     private var imageBytes: Int? = null
     private var altText: String? = null
 
-    constructor() : this(SingleBlockIdContainer())
+    fun blockId(id: String) {
+        blockId = id
+    }
 
     fun title(text: String, emoji: Boolean? = null) {
         title = PlainTextObject(text, emoji)
@@ -55,7 +54,7 @@ class ImageBlockBuilder private constructor(
                 .imageHeight(imageHeight)
                 .imageBytes(imageBytes)
                 .altText(altText)
-                .blockId(blockIdBuilder.underlying)
+                .blockId(blockId)
                 .title(title)
                 .build()
     }

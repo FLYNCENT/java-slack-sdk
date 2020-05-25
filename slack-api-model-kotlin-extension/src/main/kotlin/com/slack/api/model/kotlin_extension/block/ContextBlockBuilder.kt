@@ -2,21 +2,23 @@ package com.slack.api.model.kotlin_extension.block
 
 import com.slack.api.model.block.ContextBlock
 import com.slack.api.model.kotlin_extension.block.container.MultiContextBlockElementContainer
-import com.slack.api.model.kotlin_extension.block.container.SingleBlockIdContainer
-import com.slack.api.model.kotlin_extension.block.dsl.BlockIdDsl
 import com.slack.api.model.kotlin_extension.block.dsl.ContextBlockElementDsl
 
 @BlockLayoutBuilder
 class ContextBlockBuilder private constructor(
-        private val blockIdContainer: SingleBlockIdContainer,
         private val elementsContainer: MultiContextBlockElementContainer
-) : Builder<ContextBlock>, BlockIdDsl by blockIdContainer, ContextBlockElementDsl by elementsContainer {
+) : Builder<ContextBlock>, ContextBlockElementDsl by elementsContainer {
+    private var blockId: String? = null
 
-    constructor() : this(SingleBlockIdContainer(), MultiContextBlockElementContainer())
+    constructor() : this(MultiContextBlockElementContainer())
+
+    fun blockId(id: String) {
+        blockId = id
+    }
 
     override fun build(): ContextBlock {
         return ContextBlock.builder()
-                .blockId(blockIdContainer.underlying)
+                .blockId(blockId)
                 .elements(elementsContainer.underlying)
                 .build()
     }
