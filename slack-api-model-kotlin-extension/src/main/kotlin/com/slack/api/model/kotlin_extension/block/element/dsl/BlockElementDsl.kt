@@ -28,5 +28,24 @@ interface BlockElementDsl {
     fun multiExternalSelect(builder: MultiExternalSelectElementBuilder.() -> Unit)
 
     fun multiStaticSelect(builder: MultiStaticSelectElementBuilder.() -> Unit)
-    // TODO add more block elements if the POC is successful
+
+    fun multiUsersSelect(builder: MultiUsersSelectElementBuilder.() -> Unit)
+
+    fun overflowMenu(builder: OverflowMenuElementBuilder.() -> Unit)
+
+    fun plainTextInput(builder: PlainTextInputElementBuilder.() -> Unit)
+
+    fun radioButtons(builder: RadioButtonsElementBuilder.() -> Unit)
+
+    fun richTextList(builder: RichTextListElementBuilder.() -> Unit)
+
+    fun richTextPreformatted(builder: RichTextPreformattedElementBuilder.() -> Unit)
+
+    fun richTextQuote(builder: RichTextQuoteElementBuilder.() -> Unit)
+
+    fun richTextSection(builder: RichTextSectionElementBuilder.() -> Unit)
+
+    fun staticSelect(builder: StaticSelectElementBuilder.() -> Unit)
+
+    fun usersSelect(builder: UsersSelectElementBuilder.() -> Unit)
 }

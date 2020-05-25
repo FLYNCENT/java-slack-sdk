@@ -61,4 +61,44 @@ class MultiBlockElementContainer : BlockElementDsl {
     override fun multiStaticSelect(builder: MultiStaticSelectElementBuilder.() -> Unit) {
         underlying += MultiStaticSelectElementBuilder().apply(builder).build()
     }
+
+    override fun multiUsersSelect(builder: MultiUsersSelectElementBuilder.() -> Unit) {
+        underlying += MultiUsersSelectElementBuilder().apply(builder).build()
+    }
+
+    override fun overflowMenu(builder: OverflowMenuElementBuilder.() -> Unit) {
+        underlying += OverflowMenuElementBuilder().apply(builder).build()
+    }
+
+    override fun plainTextInput(builder: PlainTextInputElementBuilder.() -> Unit) {
+        underlying += PlainTextInputElementBuilder().apply(builder).build()
+    }
+
+    override fun radioButtons(builder: RadioButtonsElementBuilder.() -> Unit) {
+        underlying += RadioButtonsElementBuilder().apply(builder).build()
+    }
+
+    override fun richTextList(builder: RichTextListElementBuilder.() -> Unit) {
+        underlying += RichTextListElementBuilder().apply(builder).build()
+    }
+
+    override fun richTextPreformatted(builder: RichTextPreformattedElementBuilder.() -> Unit) {
+        underlying += RichTextPreformattedElementBuilder().apply(builder).build()
+    }
+
+    override fun richTextQuote(builder: RichTextQuoteElementBuilder.() -> Unit) {
+        underlying += RichTextQuoteElementBuilder().apply(builder).build()
+    }
+
+    override fun richTextSection(builder: RichTextSectionElementBuilder.() -> Unit) {
+        underlying += RichTextSectionElementBuilder().apply(builder).build()
+    }
+
+    override fun staticSelect(builder: StaticSelectElementBuilder.() -> Unit) {
+        underlying += StaticSelectElementBuilder().apply(builder).build()
+    }
+
+    override fun usersSelect(builder: UsersSelectElementBuilder.() -> Unit) {
+        underlying += UsersSelectElementBuilder().apply(builder).build()
+    }
 }
