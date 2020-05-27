@@ -10,6 +10,9 @@ import com.slack.api.methods.request.admin.teams.AdminTeamsCreateRequest;
 import com.slack.api.methods.request.admin.teams.AdminTeamsListRequest;
 import com.slack.api.methods.request.admin.teams.owners.AdminTeamsOwnersListRequest;
 import com.slack.api.methods.request.admin.teams.settings.*;
+import com.slack.api.methods.request.admin.usergroups.AdminUsergroupsAddChannelsRequest;
+import com.slack.api.methods.request.admin.usergroups.AdminUsergroupsListChannelsRequest;
+import com.slack.api.methods.request.admin.usergroups.AdminUsergroupsRemoveChannelsRequest;
 import com.slack.api.methods.request.admin.users.*;
 import com.slack.api.methods.request.api.ApiTestRequest;
 import com.slack.api.methods.request.apps.AppsUninstallRequest;
@@ -22,6 +25,11 @@ import com.slack.api.methods.request.apps.permissions.users.AppsPermissionsUsers
 import com.slack.api.methods.request.auth.AuthRevokeRequest;
 import com.slack.api.methods.request.auth.AuthTestRequest;
 import com.slack.api.methods.request.bots.BotsInfoRequest;
+import com.slack.api.methods.request.calls.CallsAddRequest;
+import com.slack.api.methods.request.calls.CallsEndRequest;
+import com.slack.api.methods.request.calls.CallsInfoRequest;
+import com.slack.api.methods.request.calls.CallsUpdateRequest;
+import com.slack.api.methods.request.calls.participants.CallsParticipantsAddRequest;
 import com.slack.api.methods.request.channels.*;
 import com.slack.api.methods.request.chat.*;
 import com.slack.api.methods.request.chat.scheduled_messages.ChatScheduledMessagesListRequest;
@@ -81,6 +89,9 @@ import com.slack.api.methods.response.admin.teams.AdminTeamsCreateResponse;
 import com.slack.api.methods.response.admin.teams.AdminTeamsListResponse;
 import com.slack.api.methods.response.admin.teams.owners.AdminTeamsOwnersListResponse;
 import com.slack.api.methods.response.admin.teams.settings.*;
+import com.slack.api.methods.response.admin.usergroups.AdminUsergroupsAddChannelsResponse;
+import com.slack.api.methods.response.admin.usergroups.AdminUsergroupsListChannelsResponse;
+import com.slack.api.methods.response.admin.usergroups.AdminUsergroupsRemoveChannelsResponse;
 import com.slack.api.methods.response.admin.users.*;
 import com.slack.api.methods.response.api.ApiTestResponse;
 import com.slack.api.methods.response.apps.AppsUninstallResponse;
@@ -93,6 +104,11 @@ import com.slack.api.methods.response.apps.permissions.users.AppsPermissionsUser
 import com.slack.api.methods.response.auth.AuthRevokeResponse;
 import com.slack.api.methods.response.auth.AuthTestResponse;
 import com.slack.api.methods.response.bots.BotsInfoResponse;
+import com.slack.api.methods.response.calls.CallsAddResponse;
+import com.slack.api.methods.response.calls.CallsEndResponse;
+import com.slack.api.methods.response.calls.CallsInfoResponse;
+import com.slack.api.methods.response.calls.CallsUpdateResponse;
+import com.slack.api.methods.response.calls.participants.CallsParticipantsAddResponse;
 import com.slack.api.methods.response.channels.*;
 import com.slack.api.methods.response.chat.*;
 import com.slack.api.methods.response.chat.scheduled_messages.ChatScheduledMessagesListResponse;
@@ -342,6 +358,22 @@ public interface MethodsClient {
     AdminTeamsSettingsSetNameResponse adminTeamsSettingsSetName(RequestConfigurator<AdminTeamsSettingsSetNameRequest.AdminTeamsSettingsSetNameRequestBuilder> req) throws IOException, SlackApiException;
 
     // ------------------------------
+    // admin.usergroups
+    // ------------------------------
+
+    AdminUsergroupsAddChannelsResponse adminUsergroupsAddChannels(AdminUsergroupsAddChannelsRequest req) throws IOException, SlackApiException;
+
+    AdminUsergroupsAddChannelsResponse adminUsergroupsAddChannels(RequestConfigurator<AdminUsergroupsAddChannelsRequest.AdminUsergroupsAddChannelsRequestBuilder> req) throws IOException, SlackApiException;
+
+    AdminUsergroupsListChannelsResponse adminUsergroupsListChannels(AdminUsergroupsListChannelsRequest req) throws IOException, SlackApiException;
+
+    AdminUsergroupsListChannelsResponse adminUsergroupsListChannels(RequestConfigurator<AdminUsergroupsListChannelsRequest.AdminUsergroupsListChannelsRequestBuilder> req) throws IOException, SlackApiException;
+
+    AdminUsergroupsRemoveChannelsResponse adminUsergroupsRemoveChannels(AdminUsergroupsRemoveChannelsRequest req) throws IOException, SlackApiException;
+
+    AdminUsergroupsRemoveChannelsResponse adminUsergroupsRemoveChannels(RequestConfigurator<AdminUsergroupsRemoveChannelsRequest.AdminUsergroupsRemoveChannelsRequestBuilder> req) throws IOException, SlackApiException;
+
+    // ------------------------------
     // admin.users
     // ------------------------------
 
@@ -492,6 +524,34 @@ public interface MethodsClient {
     BotsInfoResponse botsInfo(BotsInfoRequest req) throws IOException, SlackApiException;
 
     BotsInfoResponse botsInfo(RequestConfigurator<BotsInfoRequest.BotsInfoRequestBuilder> req) throws IOException, SlackApiException;
+
+    // ------------------------------
+    // calls
+    // ------------------------------
+
+    CallsAddResponse callsAdd(CallsAddRequest req) throws IOException, SlackApiException;
+
+    CallsAddResponse callsAdd(RequestConfigurator<CallsAddRequest.CallsAddRequestBuilder> req) throws IOException, SlackApiException;
+
+    CallsEndResponse callsEnd(CallsEndRequest req) throws IOException, SlackApiException;
+
+    CallsEndResponse callsEnd(RequestConfigurator<CallsEndRequest.CallsEndRequestBuilder> req) throws IOException, SlackApiException;
+
+    CallsInfoResponse callsInfo(CallsInfoRequest req) throws IOException, SlackApiException;
+
+    CallsInfoResponse callsInfo(RequestConfigurator<CallsInfoRequest.CallsInfoRequestBuilder> req) throws IOException, SlackApiException;
+
+    CallsUpdateResponse callsUpdate(CallsUpdateRequest req) throws IOException, SlackApiException;
+
+    CallsUpdateResponse callsUpdate(RequestConfigurator<CallsUpdateRequest.CallsUpdateRequestBuilder> req) throws IOException, SlackApiException;
+
+    // ------------------------------
+    // calls.participants
+    // ------------------------------
+
+    CallsParticipantsAddResponse callsParticipantsAdd(CallsParticipantsAddRequest req) throws IOException, SlackApiException;
+
+    CallsParticipantsAddResponse callsParticipantsAdd(RequestConfigurator<CallsParticipantsAddRequest.CallsParticipantsAddRequestBuilder> req) throws IOException, SlackApiException;
 
     // ------------------------------
     // channels

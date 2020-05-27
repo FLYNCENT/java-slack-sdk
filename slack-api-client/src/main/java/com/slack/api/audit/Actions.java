@@ -124,6 +124,7 @@ public class Actions {
         public static final String user_logout_compromised = "user_logout_compromised";
         public static final String user_session_reset_by_admin = "user_session_reset_by_admin";
         public static final String user_logout_non_compliant_mobile_app_version = "user_logout_non_compliant_mobile_app_version";
+        public static final String user_force_upgrade_non_compliant_mobile_app_version = "user_force_upgrade_non_compliant_mobile_app_version";
     }
 
     public static class File {
@@ -170,6 +171,7 @@ public class Actions {
         public static final String channel_moved = "channel_moved";
         public static final String group_converted_to_channel = "group_converted_to_channel";
         public static final String channel_renamed = "channel_renamed";
+        public static final String channel_posting_pref_changed_from_org_level = "channel_posting_pref_changed_from_org_level";
     }
 
     public static class App {

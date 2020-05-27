@@ -2,7 +2,7 @@ package test_with_remote_apis.methods_admin_api;
 
 import com.slack.api.Slack;
 import com.slack.api.methods.AsyncMethodsClient;
-import com.slack.api.methods.SlackApiException;
+import com.slack.api.methods.MethodsClient;
 import com.slack.api.methods.request.admin.users.AdminUsersAssignRequest;
 import com.slack.api.methods.request.admin.users.AdminUsersInviteRequest;
 import com.slack.api.methods.request.admin.users.AdminUsersRemoveRequest;
@@ -16,6 +16,9 @@ import com.slack.api.methods.response.admin.teams.AdminTeamsCreateResponse;
 import com.slack.api.methods.response.admin.teams.AdminTeamsListResponse;
 import com.slack.api.methods.response.admin.teams.owners.AdminTeamsOwnersListResponse;
 import com.slack.api.methods.response.admin.teams.settings.*;
+import com.slack.api.methods.response.admin.usergroups.AdminUsergroupsAddChannelsResponse;
+import com.slack.api.methods.response.admin.usergroups.AdminUsergroupsListChannelsResponse;
+import com.slack.api.methods.response.admin.usergroups.AdminUsergroupsRemoveChannelsResponse;
 import com.slack.api.methods.response.admin.users.*;
 import com.slack.api.methods.response.conversations.ConversationsCreateResponse;
 import com.slack.api.methods.response.conversations.ConversationsInfoResponse;
@@ -31,7 +34,6 @@ import org.junit.AfterClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Collections;
@@ -60,6 +62,7 @@ public class AdminApiTest {
     static String teamAdminUserToken = System.getenv(Constants.SLACK_SDK_TEST_GRID_WORKSPACE_ADMIN_USER_TOKEN);
     static String orgAdminUserToken = System.getenv(Constants.SLACK_SDK_TEST_GRID_ORG_ADMIN_USER_TOKEN);
     static String teamId = System.getenv(Constants.SLACK_SDK_TEST_GRID_TEAM_ID);
+    static String idpUsergroupId = System.getenv(Constants.SLACK_SDK_TEST_GRID_IDP_USERGROUP_ID);
     static String sharedChannelId = System.getenv(Constants.SLACK_SDK_TEST_GRID_SHARED_CHANNEL_ID);
 
     static AsyncMethodsClient methodsAsync = slack.methodsAsync(orgAdminUserToken);
@@ -95,7 +98,7 @@ public class AdminApiTest {
         }
     }
 
-    @Ignore // Doesn't work as of Jan 3, 2020
+    @Ignore // TODO: Fix this test to be more stable
     @Test
     public void changeSharedChannels() throws Exception {
         if (teamAdminUserToken != null && orgAdminUserToken != null && sharedChannelId != null) {
@@ -125,6 +128,7 @@ public class AdminApiTest {
         }
     }
 
+    @Ignore
     @Test
     public void apps_approvedList() throws Exception {
         if (orgAdminUserToken != null) {
@@ -142,6 +146,7 @@ public class AdminApiTest {
         }
     }
 
+    @Ignore
     @Test
     public void apps_restrictedList() throws Exception {
         if (orgAdminUserToken != null) {
@@ -159,6 +164,7 @@ public class AdminApiTest {
         }
     }
 
+    @Ignore
     @Test
     public void appsRequests() throws Exception {
         if (orgAdminUserToken != null) {
@@ -352,7 +358,7 @@ public class AdminApiTest {
             assertThat(setDescription.getError(), is(nullValue()));
 
             AdminTeamsSettingsSetNameResponse setName = methodsAsync
-                    .adminTeamsSettingsSetName(r -> r.teamId(teamId).name("Kaz's Awesome Engineering Team")).get();
+                    .adminTeamsSettingsSetName(r -> r.teamId(teamId).name("Slack Java SDK Testing Workspace")).get();
             assertThat(setName.getError(), is(nullValue()));
 
             try {
@@ -371,6 +377,31 @@ public class AdminApiTest {
             } catch (CompletionException | ExecutionException e) {
                 log.warn("timed out", e);
             }
+        }
+    }
+
+    @Test
+    public void usergroups() throws Exception {
+        if (teamAdminUserToken != null && orgAdminUserToken != null && idpUsergroupId != null) {
+            List<String> channelIds = slack.methods(teamAdminUserToken).conversationsList(r -> r
+                    .excludeArchived(true)
+                    .limit(100)
+            ).getChannels().stream()
+                    .filter(c -> c.getName().equals("general")).map(c -> c.getId())
+                    .collect(Collectors.toList());
+
+            MethodsClient orgAdminClient = slack.methods(orgAdminUserToken);
+            AdminUsergroupsListChannelsResponse listChannels = orgAdminClient.adminUsergroupsListChannels(r -> r
+                    .teamId(teamId).usergroupId(idpUsergroupId));
+            assertThat(listChannels.getError(), is(nullValue()));
+
+            AdminUsergroupsAddChannelsResponse addChannels = orgAdminClient.adminUsergroupsAddChannels(r -> r
+                    .teamId(teamId).usergroupId(idpUsergroupId).channelIds(channelIds));
+            assertThat(addChannels.getError(), is(nullValue()));
+
+            AdminUsergroupsRemoveChannelsResponse removeChannels = orgAdminClient.adminUsergroupsRemoveChannels(r -> r
+                    .usergroupId(idpUsergroupId).channelIds(channelIds));
+            assertThat(removeChannels.getError(), is(nullValue()));
         }
     }
 
@@ -398,11 +429,12 @@ public class AdminApiTest {
                 }
                 nextCursor = users.getResponseMetadata().getNextCursor();
             }
-            assertThat(user, is(notNullValue()));
+            assertThat("Create a guest user for this test", user, is(notNullValue()));
             final String guestUserId = user.getId();
-            long defaultExpirationTs = ZonedDateTime.parse("2037-12-31T00:00:00+09:00").toEpochSecond() / 1000;
+            long defaultExpirationTs = ZonedDateTime.now().toEpochSecond() / 1000;
             // same timestamp results in "failed_to_validate_expiration" error
-            final Long expirationTs = user.getExpirationTs() != null ? user.getExpirationTs() + 1 : defaultExpirationTs;
+            final Long expirationTs = user.getExpirationTs() != null && user.getExpirationTs() != 0 ?
+                    user.getExpirationTs() + 1 : defaultExpirationTs + 3600;
 
             AdminUsersSetExpirationResponse response = methodsAsync.adminUsersSetExpiration(r -> r
                     .teamId(teamId)

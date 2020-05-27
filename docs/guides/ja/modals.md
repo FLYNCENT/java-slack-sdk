@@ -62,9 +62,10 @@ lang: ja
 * `"view_submission"` のリクエストは、その応答 (= `ack()`) で `response_action` を指定することでモーダルの次の状態を指示します
 * [views.update](https://api.slack.com/methods/views.update)、[views.push](https://api.slack.com/methods/views.push) API メソッドはモーダル内での `"block_actions"` リクエストを受信したときに使用するものであり、`"view_submission"` 時にモーダルを操作するための API ではありません
 
+---
 ## コード例
 
-**注**: もし Bolt を使った Slack アプリ開発にまだ慣れていない方は、まず「[Bolt ことはじめ]({{ site.url | append: site.baseurl }}/guides/ja/getting-started-with-bolt)」を読んでください。
+**注**: もし Bolt を使った Slack アプリ開発にまだ慣れていない方は、まず「[Bolt 入門]({{ site.url | append: site.baseurl }}/guides/ja/getting-started-with-bolt)」を読んでください。
 
 まずはモーダルを新しく開くところから始めましょう。ここでは以下のようなモーダルを開いてみることにします。
 
@@ -103,7 +104,7 @@ lang: ja
 }
 ```
 
-**slack-api-client** は　blocks や views を構築するための扱いやすい SDL を提供しています。以下のコード例は型安全に **View** オブジェクトを生成している例です。
+**slack-api-client** は　blocks や views を構築するための扱いやすい DSL を提供しています。以下のコード例は型安全に **View** オブジェクトを生成している例です。
 
 ```java
 import com.slack.api.model.view.View;
@@ -181,7 +182,7 @@ app.command("/meeting", (req, ctx) -> {
 });
 ```
 
-Kotlin で書いた同じコードは以下のようになります（参考：「[Bolt ことはじめ > Koltin での設定]({{ site.url | append: site.baseurl }}/guides/ja/getting-started-with-bolt#getting-started-in-kotlin)」）。
+Kotlin で書いた同じコードは以下のようになります（参考：「[Bolt 入門 > Kotlin での設定]({{ site.url | append: site.baseurl }}/guides/ja/getting-started-with-bolt#getting-started-in-kotlin)」）。
 
 ```kotlin
 app.command("/meeting") { req, ctx ->
@@ -420,6 +421,8 @@ import com.slack.api.app_backend.interactive_components.payload.BlockActionPaylo
 import com.slack.api.app_backend.interactive_components.payload.BlockSuggestionPayload;
 import com.slack.api.app_backend.views.payload.ViewSubmissionPayload;
 import com.slack.api.app_backend.views.payload.ViewClosedPayload;
+import com.slack.api.app_backend.util.JsonPayloadExtractor;
+import com.slack.api.app_backend.util.JsonPayloadTypeDetector;
 import com.slack.api.util.json.GsonFactory;
 
 PseudoHttpResponse handle(PseudoHttpRequest request) {
@@ -434,9 +437,11 @@ PseudoHttpResponse handle(PseudoHttpRequest request) {
   // 2. リクエストボディをパースして callback_id, action_id が処理対象か確認
   
   // リクエストボディは payload={URL エンコードされた JSON 文字列} の形式
-  String payloadString = PseudoPayloadExtractor.extract(request.getBodyAsString());
+  JsonPayloadExtractor payloadExtractor = new JsonPayloadExtractor();
+  String payloadString = payloadExtractor.extractIfExists(request.getBodyAsString());
   // このような値になります: { "type": "block_actions", "team": { "id": "T1234567", ... 
-  String payloadType != null &&  = PseudoActionTypeExtractor.extract(payloadString);
+  JsonPayloadTypeDetector typeDetector = new JsonPayloadTypeDetector();
+  String payloadType = typeDetector.detectType(payloadString);
   
   Gson gson = GsonFactory.createSnakeCase();
   if (payloadType != null && payloadType.equals("view_submission")) {

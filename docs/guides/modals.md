@@ -64,6 +64,7 @@ In general, there are a few things to know when working with modals. They would 
 * You respond to `"view_submission"` requests with `response_action` to determine the next state of a modal
 * [views.update](https://api.slack.com/methods/views.update) and [views.push](https://api.slack.com/methods/views.push) API methods are supposed to be used when receiving `"block_actions"` requests in modals, NOT for `"view_submission"` requests
 
+---
 ## Examples
 
 **NOTE**: If you're a beginner to using Bolt for Slack App development, consult [Getting Started with Bolt]({{ site.url | append: site.baseurl }}/guides/getting-started-with-bolt), first.
@@ -196,7 +197,7 @@ app.command("/meeting") { req, ctx ->
 }
 ```
 
-In Koltin, it's much easier to embed multi-line string data in source code. It may be handier to use `viewAsString(String)` method instead.
+In Kotlin, it's much easier to embed multi-line string data in source code. It may be handier to use `viewAsString(String)` method instead.
 
 ```kotlin
 // Build a view using string interpolation
@@ -414,6 +415,8 @@ import com.slack.api.app_backend.interactive_components.payload.BlockActionPaylo
 import com.slack.api.app_backend.interactive_components.payload.BlockSuggestionPayload;
 import com.slack.api.app_backend.views.payload.ViewSubmissionPayload;
 import com.slack.api.app_backend.views.payload.ViewClosedPayload;
+import com.slack.api.app_backend.util.JsonPayloadExtractor;
+import com.slack.api.app_backend.util.JsonPayloadTypeDetector;
 import com.slack.api.util.json.GsonFactory;
 
 PseudoHttpResponse handle(PseudoHttpRequest request) {
@@ -428,9 +431,11 @@ PseudoHttpResponse handle(PseudoHttpRequest request) {
   // 2. Parse the request body and check the type, callback_id, action_id
 
   // payload={URL-encoded JSON} in the request body
-  String payloadString = PseudoPayloadExtractor.extract(request.getBodyAsString());
+  JsonPayloadExtractor payloadExtractor = new JsonPayloadExtractor();
+  String payloadString = payloadExtractor.extractIfExists(request.getBodyAsString());
   // The value looks like: { "type": "block_actions", "team": { "id": "T1234567", ... 
-  String payloadType != null &&  = PseudoActionTypeExtractor.extract(payloadString);
+  JsonPayloadTypeDetector typeDetector = new JsonPayloadTypeDetector();
+  String payloadType = typeDetector.detectType(payloadString);
   
   Gson gson = GsonFactory.createSnakeCase();
   if (payloadType != null && payloadType.equals("view_submission")) {

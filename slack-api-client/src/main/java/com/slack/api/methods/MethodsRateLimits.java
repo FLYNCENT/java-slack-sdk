@@ -40,7 +40,8 @@ public class MethodsRateLimits {
 
         // Tier1
         final List<String> adminApiMethods_Tier1 = Arrays.asList(
-                ADMIN_TEAMS_CREATE
+                ADMIN_TEAMS_CREATE,
+                ADMIN_USERGROUPS_ADD_CHANNELS
         );
         for (String methods : adminApiMethods_Tier1) {
             setRateLimitTier(methods, Tier1);
@@ -81,7 +82,10 @@ public class MethodsRateLimits {
                 ADMIN_USERS_SET_OWNER,
                 ADMIN_USERS_SET_REGULAR,
 
-                ADMIN_USERS_SESSION_RESET
+                ADMIN_USERS_SESSION_RESET,
+
+                ADMIN_USERGROUPS_LIST_CHANNELS,
+                ADMIN_USERGROUPS_REMOVE_CHANNELS
         );
         for (String methods : adminApiMethods_Tier2) {
             setRateLimitTier(methods, Tier2);
@@ -127,6 +131,12 @@ public class MethodsRateLimits {
         setRateLimitTier(AUTH_TEST, SpecialTier_auth_test);
 
         setRateLimitTier(BOTS_INFO, Tier3);
+
+        setRateLimitTier(CALLS_ADD, Tier2);
+        setRateLimitTier(CALLS_END, Tier2);
+        setRateLimitTier(CALLS_INFO, Tier2);
+        setRateLimitTier(CALLS_UPDATE, Tier2);
+        setRateLimitTier(CALLS_PARTICIPANTS_ADD, Tier2);
 
         setRateLimitTier(CHAT_DELETE, Tier3);
         setRateLimitTier(CHAT_DELETE_SCHEDULED_MESSAGE, Tier3);
