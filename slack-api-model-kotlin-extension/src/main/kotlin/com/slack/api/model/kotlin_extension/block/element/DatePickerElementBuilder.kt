@@ -8,8 +8,7 @@ import com.slack.api.model.kotlin_extension.block.Builder
 import com.slack.api.model.kotlin_extension.block.composition.ConfirmationDialogObjectBuilder
 
 @BlockLayoutBuilder
-class DatePickerElementBuilder : Builder<DatePickerElement>
-{
+class DatePickerElementBuilder : Builder<DatePickerElement> {
     private var placeholder: PlainTextObject? = null
     private var actionId: String? = null
     private var initialDate: String? = null
