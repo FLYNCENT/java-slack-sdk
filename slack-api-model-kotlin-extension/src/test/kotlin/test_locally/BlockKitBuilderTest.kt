@@ -17,7 +17,6 @@ class BlockKitBuilderTest {
 
     @Test
     fun `Can construct a chat message request equivalent to the Java builder`() {
-
         val actualReq = ChatPostMessageRequest.builder()
                 .channel("general")
                 .text("User did a thing!")
