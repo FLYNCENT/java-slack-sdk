@@ -13,7 +13,9 @@
 
     <modules>
         <module>slack-api-client</module>
+        <module>slack-api-client-kotlin-extension</module>
         <module>slack-api-model</module>
+        <module>slack-api-model-kotlin-extension</module>
         <module>slack-app-backend</module>
         <module>bolt</module>
         <module>bolt-servlet</module>
