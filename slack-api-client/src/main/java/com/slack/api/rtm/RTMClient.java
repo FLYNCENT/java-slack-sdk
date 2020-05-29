@@ -47,6 +47,8 @@ public class RTMClient implements Closeable {
      */
     private User connectedBotUser;
 
+    private boolean autoReconnect;
+
     /**
      * Current WebSocket session. This field is null when disconnected.
      */
@@ -61,6 +63,14 @@ public class RTMClient implements Closeable {
                      String botApiToken,
                      String wssUrl,
                      User connectedBotUser) throws URISyntaxException {
+        this(slack, botApiToken, wssUrl, connectedBotUser, true);
+    }
+
+    public RTMClient(Slack slack,
+                     String botApiToken,
+                     String wssUrl,
+                     User connectedBotUser,
+                     boolean autoReconnect) throws URISyntaxException {
         if (wssUrl == null) {
             throw new IllegalArgumentException("The wss URL to start Real Time Messaging API is absent.");
         }
@@ -72,6 +82,11 @@ public class RTMClient implements Closeable {
         this.botApiToken = botApiToken;
         this.wssUri = new URI(wssUrl);
         this.connectedBotUser = connectedBotUser;
+        this.autoReconnect = autoReconnect;
+
+        if (this.autoReconnect) {
+            messageHandlers.add(new AutoReconnectHandler(this));
+        }
     }
 
     /**
