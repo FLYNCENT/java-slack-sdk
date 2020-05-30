@@ -14,7 +14,7 @@ class ButtonElementBuilder : Builder<ButtonElement> {
     private var text: PlainTextObject? = null
     private var url: String? = null
     private var value: String? = null
-    private var style: ButtonStyle? = null
+    private var style: String? = null
     private var confirm: ConfirmationDialogObject? = null
 
     fun actionId(id: String) {
@@ -34,11 +34,11 @@ class ButtonElementBuilder : Builder<ButtonElement> {
     }
 
     fun style(style: ButtonStyle) {
-        this.style = style
+        this.style = style.value
     }
 
     fun style(style: String) {
-        this.style = ButtonStyle.valueOf(style.toUpperCase())
+        this.style = style
     }
 
     fun confirm(builder: ConfirmationDialogObjectBuilder.() -> Unit) {
@@ -51,7 +51,7 @@ class ButtonElementBuilder : Builder<ButtonElement> {
                 .url(url)
                 .value(value)
                 .text(text)
-                .style(style?.value)
+                .style(style)
                 .confirm(confirm)
                 .build()
     }
