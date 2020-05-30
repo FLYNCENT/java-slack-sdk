@@ -21,8 +21,8 @@ class ButtonElementBuilder : Builder<ButtonElement> {
         actionId = id
     }
 
-    fun plainText(buttonText: String, emoji: Boolean? = null) {
-        text = PlainTextObject(buttonText, emoji)
+    fun text(text: String, emoji: Boolean? = null) {
+        this.text = PlainTextObject(text, emoji)
     }
 
     fun url(text: String) {
@@ -35,6 +35,10 @@ class ButtonElementBuilder : Builder<ButtonElement> {
 
     fun style(style: ButtonStyle) {
         this.style = style
+    }
+
+    fun style(style: String) {
+        this.style = ButtonStyle.valueOf(style.toUpperCase())
     }
 
     fun confirm(builder: ConfirmationDialogObjectBuilder.() -> Unit) {

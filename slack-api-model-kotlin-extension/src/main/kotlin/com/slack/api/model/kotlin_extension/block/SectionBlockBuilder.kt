@@ -15,6 +15,7 @@ class SectionBlockBuilder private constructor(
         private val accessoryContainer: SingleBlockElementContainer
 ) : Builder<SectionBlock>, TextObjectDsl by textContainer, BlockElementDsl by accessoryContainer {
     private var blockId: String? = null
+
     // Need to separate "fields" and "fieldsContainer" because the delegate makes the list non-null by default
     private var fields: List<TextObject>? = null
 
@@ -26,6 +27,10 @@ class SectionBlockBuilder private constructor(
 
     fun fields(builder: TextObjectDsl.() -> Unit) {
         fields = MultiTextObjectContainer().apply(builder).underlying
+    }
+
+    fun accessory(builder: BlockElementDsl.() -> Unit) {
+        accessoryContainer.apply(builder)
     }
 
     override fun build(): SectionBlock {

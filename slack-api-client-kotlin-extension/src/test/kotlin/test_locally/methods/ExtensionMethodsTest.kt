@@ -1,6 +1,6 @@
-package test_locally.api.methods.kotlin_extension.request.chat
+package test_locally.methods
 
-import com.slack.api.methods.kotlin_extension.request.chat.buildBlocks
+import com.slack.api.methods.kotlin_extension.request.chat.blocks
 import com.slack.api.methods.request.chat.ChatPostMessageRequest
 import com.slack.api.model.block.Blocks.asBlocks
 import com.slack.api.model.block.Blocks.richText
@@ -10,10 +10,11 @@ import org.junit.Test
 import kotlin.test.assertEquals
 
 class ExtensionMethodsTest {
+
     @Test
     fun `Can add blocks to message post request via extension`() {
         val messageRequest = ChatPostMessageRequest.builder()
-                .buildBlocks {
+                .blocks {
                     richText {
                         richTextSection {
                             text("You can get to ")

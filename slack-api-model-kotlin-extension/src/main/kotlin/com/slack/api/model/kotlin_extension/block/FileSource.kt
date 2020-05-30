@@ -4,5 +4,6 @@ enum class FileSource {
     REMOTE {
         override val value = "remote"
     };
+
     abstract val value: String
 }
