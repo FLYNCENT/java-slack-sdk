@@ -3,6 +3,9 @@ package com.slack.api.methods;
 import com.slack.api.RequestConfigurator;
 import com.slack.api.methods.request.admin.apps.*;
 import com.slack.api.methods.request.admin.conversations.AdminConversationsSetTeamsRequest;
+import com.slack.api.methods.request.admin.conversations.whitelist.AdminConversationsWhitelistAddRequest;
+import com.slack.api.methods.request.admin.conversations.whitelist.AdminConversationsWhitelistListGroupsLinkedToChannelRequest;
+import com.slack.api.methods.request.admin.conversations.whitelist.AdminConversationsWhitelistRemoveRequest;
 import com.slack.api.methods.request.admin.emoji.*;
 import com.slack.api.methods.request.admin.invite_requests.*;
 import com.slack.api.methods.request.admin.teams.AdminTeamsAdminsListRequest;
@@ -11,6 +14,7 @@ import com.slack.api.methods.request.admin.teams.AdminTeamsListRequest;
 import com.slack.api.methods.request.admin.teams.owners.AdminTeamsOwnersListRequest;
 import com.slack.api.methods.request.admin.teams.settings.*;
 import com.slack.api.methods.request.admin.usergroups.AdminUsergroupsAddChannelsRequest;
+import com.slack.api.methods.request.admin.usergroups.AdminUsergroupsAddTeamsRequest;
 import com.slack.api.methods.request.admin.usergroups.AdminUsergroupsListChannelsRequest;
 import com.slack.api.methods.request.admin.usergroups.AdminUsergroupsRemoveChannelsRequest;
 import com.slack.api.methods.request.admin.users.*;
@@ -82,6 +86,9 @@ import com.slack.api.methods.request.views.ViewsPushRequest;
 import com.slack.api.methods.request.views.ViewsUpdateRequest;
 import com.slack.api.methods.response.admin.apps.*;
 import com.slack.api.methods.response.admin.conversations.AdminConversationsSetTeamsResponse;
+import com.slack.api.methods.response.admin.conversations.whitelist.AdminConversationsWhitelistAddResponse;
+import com.slack.api.methods.response.admin.conversations.whitelist.AdminConversationsWhitelistListGroupsLinkedToChannelResponse;
+import com.slack.api.methods.response.admin.conversations.whitelist.AdminConversationsWhitelistRemoveResponse;
 import com.slack.api.methods.response.admin.emoji.*;
 import com.slack.api.methods.response.admin.invite_requests.*;
 import com.slack.api.methods.response.admin.teams.AdminTeamsAdminsListResponse;
@@ -90,6 +97,7 @@ import com.slack.api.methods.response.admin.teams.AdminTeamsListResponse;
 import com.slack.api.methods.response.admin.teams.owners.AdminTeamsOwnersListResponse;
 import com.slack.api.methods.response.admin.teams.settings.*;
 import com.slack.api.methods.response.admin.usergroups.AdminUsergroupsAddChannelsResponse;
+import com.slack.api.methods.response.admin.usergroups.AdminUsergroupsAddTeamsResponse;
 import com.slack.api.methods.response.admin.usergroups.AdminUsergroupsListChannelsResponse;
 import com.slack.api.methods.response.admin.usergroups.AdminUsergroupsRemoveChannelsResponse;
 import com.slack.api.methods.response.admin.users.*;
@@ -254,6 +262,31 @@ public interface MethodsClient {
     AdminConversationsSetTeamsResponse adminConversationsSetTeams(RequestConfigurator<AdminConversationsSetTeamsRequest.AdminConversationsSetTeamsRequestBuilder> req) throws IOException, SlackApiException;
 
     // ------------------------------
+    // admin.conversations.whitelist
+    // ------------------------------
+
+    AdminConversationsWhitelistAddResponse adminConversationsWhitelistAdd(
+            AdminConversationsWhitelistAddRequest req) throws IOException, SlackApiException;
+
+    AdminConversationsWhitelistAddResponse adminConversationsWhitelistAdd(
+            RequestConfigurator<AdminConversationsWhitelistAddRequest.AdminConversationsWhitelistAddRequestBuilder> req)
+            throws IOException, SlackApiException;
+
+    AdminConversationsWhitelistRemoveResponse adminConversationsWhitelistRemove(
+            AdminConversationsWhitelistRemoveRequest req) throws IOException, SlackApiException;
+
+    AdminConversationsWhitelistRemoveResponse adminConversationsWhitelistRemove(
+            RequestConfigurator<AdminConversationsWhitelistRemoveRequest.AdminConversationsWhitelistRemoveRequestBuilder> req)
+            throws IOException, SlackApiException;
+
+    AdminConversationsWhitelistListGroupsLinkedToChannelResponse adminConversationsWhitelistListGroupsLinkedToChannel(
+            AdminConversationsWhitelistListGroupsLinkedToChannelRequest req) throws IOException, SlackApiException;
+
+    AdminConversationsWhitelistListGroupsLinkedToChannelResponse adminConversationsWhitelistListGroupsLinkedToChannel(
+            RequestConfigurator<AdminConversationsWhitelistListGroupsLinkedToChannelRequest.AdminConversationsWhitelistListGroupsLinkedToChannelRequestBuilder> req)
+            throws IOException, SlackApiException;
+
+    // ------------------------------
     // admin.emoji
     // ------------------------------
 
@@ -363,15 +396,27 @@ public interface MethodsClient {
 
     AdminUsergroupsAddChannelsResponse adminUsergroupsAddChannels(AdminUsergroupsAddChannelsRequest req) throws IOException, SlackApiException;
 
-    AdminUsergroupsAddChannelsResponse adminUsergroupsAddChannels(RequestConfigurator<AdminUsergroupsAddChannelsRequest.AdminUsergroupsAddChannelsRequestBuilder> req) throws IOException, SlackApiException;
+    AdminUsergroupsAddChannelsResponse adminUsergroupsAddChannels(
+            RequestConfigurator<AdminUsergroupsAddChannelsRequest.AdminUsergroupsAddChannelsRequestBuilder> req)
+            throws IOException, SlackApiException;
+
+    AdminUsergroupsAddTeamsResponse adminUsergroupsAddTeams(AdminUsergroupsAddTeamsRequest req) throws IOException, SlackApiException;
+
+    AdminUsergroupsAddTeamsResponse adminUsergroupsAddTeams(
+            RequestConfigurator<AdminUsergroupsAddTeamsRequest.AdminUsergroupsAddTeamsRequestBuilder> req)
+            throws IOException, SlackApiException;
 
     AdminUsergroupsListChannelsResponse adminUsergroupsListChannels(AdminUsergroupsListChannelsRequest req) throws IOException, SlackApiException;
 
-    AdminUsergroupsListChannelsResponse adminUsergroupsListChannels(RequestConfigurator<AdminUsergroupsListChannelsRequest.AdminUsergroupsListChannelsRequestBuilder> req) throws IOException, SlackApiException;
+    AdminUsergroupsListChannelsResponse adminUsergroupsListChannels(
+            RequestConfigurator<AdminUsergroupsListChannelsRequest.AdminUsergroupsListChannelsRequestBuilder> req)
+            throws IOException, SlackApiException;
 
     AdminUsergroupsRemoveChannelsResponse adminUsergroupsRemoveChannels(AdminUsergroupsRemoveChannelsRequest req) throws IOException, SlackApiException;
 
-    AdminUsergroupsRemoveChannelsResponse adminUsergroupsRemoveChannels(RequestConfigurator<AdminUsergroupsRemoveChannelsRequest.AdminUsergroupsRemoveChannelsRequestBuilder> req) throws IOException, SlackApiException;
+    AdminUsergroupsRemoveChannelsResponse adminUsergroupsRemoveChannels(
+            RequestConfigurator<AdminUsergroupsRemoveChannelsRequest.AdminUsergroupsRemoveChannelsRequestBuilder> req)
+            throws IOException, SlackApiException;
 
     // ------------------------------
     // admin.users

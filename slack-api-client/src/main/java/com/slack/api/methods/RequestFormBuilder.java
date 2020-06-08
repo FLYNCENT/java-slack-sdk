@@ -3,6 +3,9 @@ package com.slack.api.methods;
 import com.google.gson.Gson;
 import com.slack.api.methods.request.admin.apps.*;
 import com.slack.api.methods.request.admin.conversations.AdminConversationsSetTeamsRequest;
+import com.slack.api.methods.request.admin.conversations.whitelist.AdminConversationsWhitelistAddRequest;
+import com.slack.api.methods.request.admin.conversations.whitelist.AdminConversationsWhitelistListGroupsLinkedToChannelRequest;
+import com.slack.api.methods.request.admin.conversations.whitelist.AdminConversationsWhitelistRemoveRequest;
 import com.slack.api.methods.request.admin.emoji.*;
 import com.slack.api.methods.request.admin.invite_requests.*;
 import com.slack.api.methods.request.admin.teams.AdminTeamsAdminsListRequest;
@@ -11,6 +14,7 @@ import com.slack.api.methods.request.admin.teams.AdminTeamsListRequest;
 import com.slack.api.methods.request.admin.teams.owners.AdminTeamsOwnersListRequest;
 import com.slack.api.methods.request.admin.teams.settings.*;
 import com.slack.api.methods.request.admin.usergroups.AdminUsergroupsAddChannelsRequest;
+import com.slack.api.methods.request.admin.usergroups.AdminUsergroupsAddTeamsRequest;
 import com.slack.api.methods.request.admin.usergroups.AdminUsergroupsListChannelsRequest;
 import com.slack.api.methods.request.admin.usergroups.AdminUsergroupsRemoveChannelsRequest;
 import com.slack.api.methods.request.admin.users.*;
@@ -157,6 +161,29 @@ public class RequestFormBuilder {
         if (req.getTargetTeamIds() != null) {
             setIfNotNull("target_team_ids", req.getTargetTeamIds().stream().collect(joining(",")), form);
         }
+        setIfNotNull("team_id", req.getTeamId(), form);
+        return form;
+    }
+
+    public static FormBody.Builder toForm(AdminConversationsWhitelistAddRequest req) {
+        FormBody.Builder form = new FormBody.Builder();
+        setIfNotNull("channel_id", req.getChannelId(), form);
+        setIfNotNull("group_id", req.getGroupId(), form);
+        setIfNotNull("team_id", req.getTeamId(), form);
+        return form;
+    }
+
+    public static FormBody.Builder toForm(AdminConversationsWhitelistRemoveRequest req) {
+        FormBody.Builder form = new FormBody.Builder();
+        setIfNotNull("channel_id", req.getChannelId(), form);
+        setIfNotNull("group_id", req.getGroupId(), form);
+        setIfNotNull("team_id", req.getTeamId(), form);
+        return form;
+    }
+
+    public static FormBody.Builder toForm(AdminConversationsWhitelistListGroupsLinkedToChannelRequest req) {
+        FormBody.Builder form = new FormBody.Builder();
+        setIfNotNull("channel_id", req.getChannelId(), form);
         setIfNotNull("team_id", req.getTeamId(), form);
         return form;
     }
@@ -311,6 +338,14 @@ public class RequestFormBuilder {
         setIfNotNull("channel_ids", req.getChannelIds().stream().collect(joining(",")), form);
         setIfNotNull("team_id", req.getTeamId(), form);
         setIfNotNull("usergroup_id", req.getUsergroupId(), form);
+        return form;
+    }
+
+    public static FormBody.Builder toForm(AdminUsergroupsAddTeamsRequest req) {
+        FormBody.Builder form = new FormBody.Builder();
+        setIfNotNull("team_ids", req.getTeamIds().stream().collect(joining(",")), form);
+        setIfNotNull("usergroup_id", req.getUsergroupId(), form);
+        setIfNotNull("auto_provision", req.getAutoProvision(), form);
         return form;
     }
 

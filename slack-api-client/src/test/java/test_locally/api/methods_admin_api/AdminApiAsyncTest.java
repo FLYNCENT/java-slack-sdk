@@ -57,6 +57,18 @@ public class AdminApiAsyncTest {
     }
 
     @Test
+    public void adminConversationsWhitelist() throws Exception {
+        AsyncMethodsClient methods = slack.methodsAsync(ValidToken);
+
+        assertThat(methods.adminConversationsWhitelistAdd(r -> r.channelId("C123").teamId("T123"))
+                .get().isOk(), is(true));
+        assertThat(methods.adminConversationsWhitelistRemove(r -> r.channelId("C123").teamId("T123"))
+                .get().isOk(), is(true));
+        assertThat(methods.adminConversationsWhitelistListGroupsLinkedToChannel(r -> r.channelId("C123").teamId("T123"))
+                .get().isOk(), is(true));
+    }
+
+    @Test
     public void adminEmoji() throws Exception {
         AsyncMethodsClient methods = slack.methodsAsync(ValidToken);
 
@@ -150,6 +162,8 @@ public class AdminApiAsyncTest {
         assertThat(methods.adminUsergroupsListChannels(r -> r.teamId("T123").usergroupId("S123").includeNumMembers(true))
                 .get().isOk(), is(true));
         assertThat(methods.adminUsergroupsRemoveChannels(r -> r.usergroupId("S123").channelIds(Arrays.asList("C123", "C234")))
+                .get().isOk(), is(true));
+        assertThat(methods.adminUsergroupsAddTeams(r -> r.usergroupId("S123").teamIds(Arrays.asList("T123", "T234")))
                 .get().isOk(), is(true));
     }
 
