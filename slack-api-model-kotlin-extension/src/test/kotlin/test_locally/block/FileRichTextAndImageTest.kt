@@ -288,4 +288,59 @@ class FileRichTextAndImageTest {
         val actual = gson.toJsonTree(blocks)
         assertEquals(expected, actual, "\n" + expected.toString() + "\n" + actual.toString())
     }
+
+    @Test
+    fun `Remaining rich text builder tests`() {
+        val gson = GsonFactory.createSnakeCase()
+        val blocks = withBlocks {
+            richText {
+                richTextPreformatted {
+                    elements {
+                        text("Preformatted text")
+                    }
+                }
+                richTextSection {
+                    channel("general")
+                    emoji("tada")
+                }
+            }
+        }
+        val original = """
+            {
+              "blocks": [
+                {
+                  "type": "rich_text",
+                  "elements": [
+                    {
+                      "type": "rich_text_preformatted",
+                      "elements": [
+                        {
+                          "type": "text",
+                          "text": "Preformatted text"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "rich_text_section",
+                      "elements": [
+                        {
+                          "type": "channel",
+                          "channel_id": "general"
+                        },
+                        {
+                          "type": "emoji",
+                          "name": "tada"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+        """.trimIndent()
+        val json = gson.fromJson(original, JsonElement::class.java)
+        val expected = json.asJsonObject["blocks"]
+        val actual = gson.toJsonTree(blocks)
+        assertEquals(expected, actual, "\n" + expected.toString() + "\n" + actual.toString())
+    }
 }
