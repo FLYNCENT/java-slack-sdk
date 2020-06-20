@@ -17,22 +17,53 @@ class MultiConversationsSelectElementBuilder : Builder<MultiConversationsSelectE
     private var filter: ConversationsFilter? = null
     private var confirm: ConfirmationDialogObject? = null
 
+    /**
+     * Adds a plain text object in the placeholder field.
+     *
+     * The placeholder text shown on the menu. Maximum length for the text in this field is 150 characters.
+     *
+     * @see <a href="https://api.slack.com/reference/block-kit/block-elements#conversation_multi_select">Multi conversations select element documentation</a>
+     */
     fun placeholder(text: String, emoji: Boolean? = null) {
         placeholder = PlainTextObject(text, emoji)
     }
 
+    /**
+     * An identifier for the action triggered when a menu option is selected. You can use this when you receive an
+     * interaction payload to identify the source of the action. Should be unique among all other action_ids used
+     * elsewhere by your app. Maximum length for this field is 255 characters.
+     *
+     * @see <a href="https://api.slack.com/reference/block-kit/block-elements#conversation_multi_select">Multi conversations select element documentation</a>
+     */
     fun actionId(id: String) {
         actionId = id
     }
 
+    /**
+     * An array of one or more IDs of any valid conversations to be pre-selected when the menu loads.
+     *
+     * @see <a href="https://api.slack.com/reference/block-kit/block-elements#conversation_multi_select">Multi conversations select element documentation</a>
+     */
     fun initialConversations(vararg conversations: String) {
         initialConversations = conversations.toList()
     }
 
+    /**
+     * Specifies the maximum number of items that can be selected in the menu. Minimum number is 1.
+     *
+     * @see <a href="https://api.slack.com/reference/block-kit/block-elements#conversation_multi_select">Multi conversations select element documentation</a>
+     */
     fun maxSelectedItems(items: Int) {
         maxSelectedItems = items
     }
 
+    /**
+     * A filter object that reduces the list of available conversations using the specified criteria.
+     *
+     * This implementation uses a type-safe enum to specify the conversation types to be filtered.
+     *
+     * @see <a href="https://api.slack.com/reference/block-kit/block-elements#conversation_multi_select">Multi conversations select element documentation</a>
+     */
     fun filter(vararg include: ConversationType, excludeExternalSharedChannels: Boolean? = null, excludeBotUsers: Boolean? = null) {
         filter = ConversationsFilter.builder()
                 .include(include.map { it.value })
@@ -41,6 +72,14 @@ class MultiConversationsSelectElementBuilder : Builder<MultiConversationsSelectE
                 .build()
     }
 
+    /**
+     * A filter object that reduces the list of available conversations using the specified criteria.
+     *
+     * This implementation uses strings to specify the conversation types to be filtered. This may be preferable if
+     * a new conversation type gets introduced and the enum class is not sufficient.
+     *
+     * @see <a href="https://api.slack.com/reference/block-kit/block-elements#conversation_multi_select">Multi conversations select element documentation</a>
+     */
     fun filter(vararg include: String, excludeExternalSharedChannels: Boolean? = null, excludeBotUsers: Boolean? = null) {
         filter = ConversationsFilter.builder()
                 .include(include.toList())
@@ -49,6 +88,12 @@ class MultiConversationsSelectElementBuilder : Builder<MultiConversationsSelectE
                 .build()
     }
 
+    /**
+     * A confirm object that defines an optional confirmation dialog that appears before the multi-select choices are
+     * submitted.
+     *
+     * @see <a href="https://api.slack.com/reference/block-kit/block-elements#conversation_multi_select">Multi conversations select element documentation</a>
+     */
     fun confirm(builder: ConfirmationDialogObjectBuilder.() -> Unit) {
         confirm = ConfirmationDialogObjectBuilder().apply(builder).build()
     }

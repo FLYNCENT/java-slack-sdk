@@ -14,6 +14,9 @@ class RichTextElementUserBuilder private constructor(
 
     constructor() : this(SingleRichTextStyleContainer())
 
+    /**
+     * The ID of the user to be referenced.
+     */
     fun userId(id: String) {
         userId = id
     }

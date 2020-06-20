@@ -14,6 +14,9 @@ class RichTextElementTextBuilder private constructor(
 
     constructor() : this(SingleRichTextStyleContainer())
 
+    /**
+     * The rendered text.
+     */
     fun text(containedText: String) {
         text = containedText
     }

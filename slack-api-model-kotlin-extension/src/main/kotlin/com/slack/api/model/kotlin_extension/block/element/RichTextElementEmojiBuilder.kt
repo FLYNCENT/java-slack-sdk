@@ -15,10 +15,16 @@ class RichTextElementEmojiBuilder private constructor(
 
     constructor() : this(SingleRichTextStyleContainer())
 
+    /**
+     * The name of the emoji to render.
+     */
     fun name(name: String) {
         this.name = name
     }
 
+    /**
+     * If this is an emoji that supports skin tones, this will be the index of the skin tone rendered.
+     */
     fun skinTone(tone: Int) {
         skinTone = tone
     }

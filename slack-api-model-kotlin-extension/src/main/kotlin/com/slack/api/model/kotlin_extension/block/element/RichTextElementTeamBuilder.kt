@@ -14,6 +14,9 @@ class RichTextElementTeamBuilder private constructor(
 
     constructor() : this(SingleRichTextStyleContainer())
 
+    /**
+     * The ID of the referenced team.
+     */
     fun teamId(id: String) {
         teamId = id
     }

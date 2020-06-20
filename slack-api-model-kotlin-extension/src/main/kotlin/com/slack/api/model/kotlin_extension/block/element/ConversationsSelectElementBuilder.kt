@@ -17,22 +17,56 @@ class ConversationsSelectElementBuilder : Builder<ConversationsSelectElement> {
     private var conversationsFilter: ConversationsFilter? = null
     private var confirm: ConfirmationDialogObject? = null
 
+    /**
+     * Fills the placeholder field with a plain text object.
+     *
+     * The placeholder text shown on the menu. Maximum length for the text in this field is 150 characters.
+     *
+     * @see <a href="https://api.slack.com/reference/block-kit/block-elements#conversation_select">Conversations select element documentation</a>
+     */
     fun placeholder(text: String, emoji: Boolean? = null) {
         placeholder = PlainTextObject(text, emoji)
     }
 
+    /**
+     * An identifier for the action triggered when a menu option is selected. You can use this when you receive an
+     * interaction payload to identify the source of the action. Should be unique among all other action_ids used
+     * elsewhere by your app. Maximum length for this field is 255 characters.
+     *
+     * @see <a href="https://api.slack.com/reference/block-kit/block-elements#conversation_select">Conversations select element documentation</a>
+     */
     fun actionId(id: String) {
         actionId = id
     }
 
+    /**
+     * The ID of any valid conversation to be pre-selected when the menu loads.
+     *
+     * @see <a href="https://api.slack.com/reference/block-kit/block-elements#conversation_select">Conversations select element documentation</a>
+     */
     fun initialConversation(conversation: String) {
         initialConversation = conversation
     }
 
+    /**
+     * <b>This field only works with menus in input blocks in modals.</b>
+     * When set to true, the view_submission payload from the menu's parent view will contain a response_url. This
+     * response_url can be used for message responses. The target conversation for the message will be determined by
+     * the value of this select menu.
+     *
+     * @see <a href="https://api.slack.com/reference/block-kit/block-elements#conversation_select">Conversations select element documentation</a>
+     */
     fun responseUrlEnabled(enabled: Boolean) {
         responseUrlEnabled = enabled
     }
 
+    /**
+     * A filter object that reduces the list of available conversations using the specified criteria.
+     *
+     * This implementation uses a type-safe enum for the allowable conversation types.
+     *
+     * @see <a href="https://api.slack.com/reference/block-kit/block-elements#conversation_select">Conversations select element documentation</a>
+     */
     fun conversationsFilter(vararg include: ConversationType, excludeExternalSharedChannels: Boolean = false, excludeBotUsers: Boolean = false) {
         conversationsFilter = ConversationsFilter.builder()
                 .include(include.map { it.value })
@@ -41,6 +75,14 @@ class ConversationsSelectElementBuilder : Builder<ConversationsSelectElement> {
                 .build()
     }
 
+    /**
+     * A filter object that reduces the list of available conversations using the specified criteria.
+     *
+     * This implementation uses strings for the allowable conversation types. This may be preferable if new filters
+     * are released and the type-safe enum is insufficient.
+     *
+     * @see <a href="https://api.slack.com/reference/block-kit/block-elements#conversation_select">Conversations select element documentation</a>
+     */
     fun conversationsFilter(vararg include: String, excludeExternalSharedChannels: Boolean = false, excludeBotUsers: Boolean = false) {
         conversationsFilter = ConversationsFilter.builder()
                 .include(include.toList())
@@ -49,6 +91,11 @@ class ConversationsSelectElementBuilder : Builder<ConversationsSelectElement> {
                 .build()
     }
 
+    /**
+     * A confirm object that defines an optional confirmation dialog that appears after a menu item is selected.
+     *
+     * @see <a href="https://api.slack.com/reference/block-kit/block-elements#conversation_select">Conversations select element documentation</a>
+     */
     fun confirm(builder: ConfirmationDialogObjectBuilder.() -> Unit) {
         confirm = ConfirmationDialogObjectBuilder().apply(builder).build()
     }

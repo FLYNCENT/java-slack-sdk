@@ -14,6 +14,9 @@ class RichTextElementChannelBuilder private constructor(
 
     constructor() : this(SingleRichTextStyleContainer())
 
+    /**
+     * The ID of the channel to reference.
+     */
     fun channelId(id: String) {
         channelId = id
     }

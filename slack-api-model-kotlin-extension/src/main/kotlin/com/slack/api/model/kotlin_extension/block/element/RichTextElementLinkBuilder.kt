@@ -15,10 +15,16 @@ class RichTextElementLinkBuilder private constructor(
 
     constructor() : this(SingleRichTextStyleContainer())
 
+    /**
+     * The URL to redirect to when this link is clicked.
+     */
     fun url(url: String) {
         this.url = url
     }
 
+    /**
+     * The text shown for the hyperlink.
+     */
     fun text(text: String) {
         this.text = text
     }

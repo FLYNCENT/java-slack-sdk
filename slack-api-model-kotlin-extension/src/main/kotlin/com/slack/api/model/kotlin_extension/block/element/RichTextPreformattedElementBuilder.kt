@@ -10,6 +10,9 @@ class RichTextPreformattedElementBuilder private constructor(
 ) : Builder<RichTextPreformattedElement>, RichTextElementDsl by elementsContainer {
     constructor() : this(MultiRichTextElementContainer())
 
+    /**
+     * Text elements contained in this preformatted text block.
+     */
     fun elements(builder: RichTextElementDsl.() -> Unit) {
         elementsContainer.apply(builder)
     }
