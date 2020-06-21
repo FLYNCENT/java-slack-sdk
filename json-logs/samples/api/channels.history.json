@@ -67,6 +67,7 @@
               "initial_channel": "",
               "response_url_enabled": false,
               "initial_conversation": "",
+              "default_to_current_conversation": false,
               "filter": {
                 "exclude_external_shared_channels": false,
                 "exclude_bot_users": false
@@ -201,6 +202,7 @@
               "initial_channel": "",
               "response_url_enabled": false,
               "initial_conversation": "",
+              "default_to_current_conversation": false,
               "filter": {
                 "exclude_external_shared_channels": false,
                 "exclude_bot_users": false
@@ -667,13 +669,23 @@
           ],
           "count": 12345
         }
-      ]
+      ],
+      "client_msg_id": ""
     }
   ],
   "has_more": false,
   "channel_actions_ts": 12345,
   "channel_actions_count": 12345,
   "latest": "0000000000.000000",
+  "warning": "",
+  "response_metadata": {
+    "messages": [
+      ""
+    ],
+    "warnings": [
+      ""
+    ]
+  },
   "error": "",
   "needed": "",
   "provided": ""
