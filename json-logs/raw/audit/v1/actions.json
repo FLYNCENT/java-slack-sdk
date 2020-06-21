@@ -86,7 +86,12 @@
       "pref.username_policy",
       "pref.enterprise_team_creation_request",
       "pref.loading_only_admins",
-      "pref.display_real_names"
+      "pref.display_real_names",
+      "manual_export_downloaded",
+      "scheduled_export_downloaded",
+      "channels_export_downloaded",
+      "manual_user_export_downloaded",
+      "pref.admin_retention_override_changed"
     ],
     "user": [
       "custom_tos_accepted",

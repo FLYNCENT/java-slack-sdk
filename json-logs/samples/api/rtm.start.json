@@ -331,7 +331,10 @@
         "pt-BR": "",
         "ja-JP": ""
       },
-      "channel_sidebar_hide_browse_dms_link": false
+      "channel_sidebar_hide_browse_dms_link": false,
+      "enable_all_dms_view": false,
+      "seen_edit_mode": false,
+      "newxp_seen_help_message": 12345
     },
     "created": 12345,
     "first_login": 12345,
@@ -558,7 +561,18 @@
           ""
         ]
       },
-      "invites_limit": false
+      "invites_limit": false,
+      "ntlm_credential_domains": "",
+      "allow_admin_retention_override": 12345,
+      "who_can_manage_private_channels_at_workspace_level": {
+        "user": [
+          ""
+        ],
+        "type": [
+          ""
+        ]
+      },
+      "has_compliance_export": false
     },
     "icon": {
       "image_34": "https://www.example.com/",
