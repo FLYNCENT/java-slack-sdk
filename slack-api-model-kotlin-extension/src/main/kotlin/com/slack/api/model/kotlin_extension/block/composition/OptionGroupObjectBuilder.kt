@@ -1,6 +1,7 @@
 package com.slack.api.model.kotlin_extension.block.composition
 
 import com.slack.api.model.block.composition.OptionGroupObject
+import com.slack.api.model.block.composition.OptionObject
 import com.slack.api.model.block.composition.PlainTextObject
 import com.slack.api.model.kotlin_extension.block.BlockLayoutBuilder
 import com.slack.api.model.kotlin_extension.block.Builder
@@ -24,6 +25,10 @@ class OptionGroupObjectBuilder private constructor(
      */
     fun label(text: String, emoji: Boolean? = null) {
         label = PlainTextObject(text, emoji)
+    }
+
+    fun options(options: List<OptionObject>) {
+        this.optionContainer.underlying.addAll(options)
     }
 
     override fun build(): OptionGroupObject {

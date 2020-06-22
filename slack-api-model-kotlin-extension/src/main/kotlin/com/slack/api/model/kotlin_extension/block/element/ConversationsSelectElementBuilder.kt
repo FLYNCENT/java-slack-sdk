@@ -14,7 +14,8 @@ class ConversationsSelectElementBuilder : Builder<ConversationsSelectElement> {
     private var actionId: String? = null
     private var initialConversation: String? = null
     private var responseUrlEnabled: Boolean? = null
-    private var conversationsFilter: ConversationsFilter? = null
+    private var defaultToCurrentConversation: Boolean? = null
+    private var filter: ConversationsFilter? = null
     private var confirm: ConfirmationDialogObject? = null
 
     /**
@@ -61,14 +62,24 @@ class ConversationsSelectElementBuilder : Builder<ConversationsSelectElement> {
     }
 
     /**
+     * Pre-populates the select menu with the conversation that the user was viewing when they opened the modal,
+     * if available. If initial_conversation is also supplied, it will be ignored. Default is false.
+     *
+     * @see <a href="https://api.slack.com/reference/block-kit/block-elements#conversation_select">Conversations select element documentation</a>
+     */
+    fun defaultToCurrentConversation(defaultToCurrentConversation: Boolean) {
+        this.defaultToCurrentConversation = defaultToCurrentConversation
+    }
+
+    /**
      * A filter object that reduces the list of available conversations using the specified criteria.
      *
      * This implementation uses a type-safe enum for the allowable conversation types.
      *
      * @see <a href="https://api.slack.com/reference/block-kit/block-elements#conversation_select">Conversations select element documentation</a>
      */
-    fun conversationsFilter(vararg include: ConversationType, excludeExternalSharedChannels: Boolean = false, excludeBotUsers: Boolean = false) {
-        conversationsFilter = ConversationsFilter.builder()
+    fun filter(vararg include: ConversationType, excludeExternalSharedChannels: Boolean = false, excludeBotUsers: Boolean = false) {
+        filter = ConversationsFilter.builder()
                 .include(include.map { it.value })
                 .excludeExternalSharedChannels(excludeExternalSharedChannels)
                 .excludeBotUsers(excludeBotUsers)
@@ -83,8 +94,8 @@ class ConversationsSelectElementBuilder : Builder<ConversationsSelectElement> {
      *
      * @see <a href="https://api.slack.com/reference/block-kit/block-elements#conversation_select">Conversations select element documentation</a>
      */
-    fun conversationsFilter(vararg include: String, excludeExternalSharedChannels: Boolean = false, excludeBotUsers: Boolean = false) {
-        conversationsFilter = ConversationsFilter.builder()
+    fun filter(vararg include: String, excludeExternalSharedChannels: Boolean = false, excludeBotUsers: Boolean = false) {
+        filter = ConversationsFilter.builder()
                 .include(include.toList())
                 .excludeExternalSharedChannels(excludeExternalSharedChannels)
                 .excludeBotUsers(excludeBotUsers)
@@ -107,7 +118,8 @@ class ConversationsSelectElementBuilder : Builder<ConversationsSelectElement> {
                 .initialConversation(initialConversation)
                 .confirm(confirm)
                 .responseUrlEnabled(responseUrlEnabled)
-                .filter(conversationsFilter)
+                .defaultToCurrentConversation(defaultToCurrentConversation)
+                .filter(filter)
                 .build()
     }
 }

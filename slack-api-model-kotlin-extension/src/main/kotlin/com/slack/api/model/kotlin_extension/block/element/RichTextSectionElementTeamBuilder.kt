@@ -7,33 +7,24 @@ import com.slack.api.model.kotlin_extension.block.element.container.SingleRichTe
 import com.slack.api.model.kotlin_extension.block.element.dsl.RichTextStyleDsl
 
 @BlockLayoutBuilder
-class RichTextElementEmojiBuilder private constructor(
+class RichTextSectionElementTeamBuilder private constructor(
         private val styleContainer: SingleRichTextStyleContainer
-) : Builder<RichTextSectionElement.Emoji>, RichTextStyleDsl by styleContainer {
-    private var name: String? = null
-    private var skinTone: Int? = null
+) : Builder<RichTextSectionElement.Team>, RichTextStyleDsl by styleContainer {
+    private var teamId: String? = null
 
     constructor() : this(SingleRichTextStyleContainer())
 
     /**
-     * The name of the emoji to render.
+     * The ID of the referenced team.
      */
-    fun name(name: String) {
-        this.name = name
+    fun teamId(id: String) {
+        teamId = id
     }
 
-    /**
-     * If this is an emoji that supports skin tones, this will be the index of the skin tone rendered.
-     */
-    fun skinTone(tone: Int) {
-        skinTone = tone
-    }
-
-    override fun build(): RichTextSectionElement.Emoji {
-        return RichTextSectionElement.Emoji.builder()
+    override fun build(): RichTextSectionElement.Team {
+        return RichTextSectionElement.Team.builder()
                 .style(styleContainer.underlying)
-                .name(name)
-                .skinTone(skinTone)
+                .teamId(teamId)
                 .build()
     }
 }

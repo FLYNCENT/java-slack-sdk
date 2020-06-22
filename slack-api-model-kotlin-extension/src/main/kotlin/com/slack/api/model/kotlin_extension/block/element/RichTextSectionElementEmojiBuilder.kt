@@ -7,33 +7,33 @@ import com.slack.api.model.kotlin_extension.block.element.container.SingleRichTe
 import com.slack.api.model.kotlin_extension.block.element.dsl.RichTextStyleDsl
 
 @BlockLayoutBuilder
-class RichTextElementLinkBuilder private constructor(
+class RichTextSectionElementEmojiBuilder private constructor(
         private val styleContainer: SingleRichTextStyleContainer
-) : Builder<RichTextSectionElement.Link>, RichTextStyleDsl by styleContainer {
-    private var url: String? = null
-    private var text: String? = null
+) : Builder<RichTextSectionElement.Emoji>, RichTextStyleDsl by styleContainer {
+    private var name: String? = null
+    private var skinTone: Int? = null
 
     constructor() : this(SingleRichTextStyleContainer())
 
     /**
-     * The URL to redirect to when this link is clicked.
+     * The name of the emoji to render.
      */
-    fun url(url: String) {
-        this.url = url
+    fun name(name: String) {
+        this.name = name
     }
 
     /**
-     * The text shown for the hyperlink.
+     * If this is an emoji that supports skin tones, this will be the index of the skin tone rendered.
      */
-    fun text(text: String) {
-        this.text = text
+    fun skinTone(tone: Int) {
+        skinTone = tone
     }
 
-    override fun build(): RichTextSectionElement.Link {
-        return RichTextSectionElement.Link.builder()
+    override fun build(): RichTextSectionElement.Emoji {
+        return RichTextSectionElement.Emoji.builder()
                 .style(styleContainer.underlying)
-                .url(url)
-                .text(text)
+                .name(name)
+                .skinTone(skinTone)
                 .build()
     }
 }

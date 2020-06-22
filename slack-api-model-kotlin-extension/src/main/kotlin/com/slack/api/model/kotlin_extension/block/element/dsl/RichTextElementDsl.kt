@@ -9,7 +9,7 @@ interface RichTextElementDsl {
     /**
      * Defines plain text and additional text styling.
      */
-    fun text(builder: RichTextElementTextBuilder.() -> Unit)
+    fun text(builder: RichTextSectionElementTextBuilder.() -> Unit)
 
     /**
      * Defines some plain text without any styling.
@@ -19,7 +19,7 @@ interface RichTextElementDsl {
     /**
      * Defines a link to a channel with text styling.
      */
-    fun channel(builder: RichTextElementChannelBuilder.() -> Unit)
+    fun channel(builder: RichTextSectionElementChannelBuilder.() -> Unit)
 
     /**
      * Defines a link to a channel without any styling.
@@ -29,7 +29,7 @@ interface RichTextElementDsl {
     /**
      * Defines a link to a user with text styling.
      */
-    fun user(builder: RichTextElementUserBuilder.() -> Unit)
+    fun user(builder: RichTextSectionElementUserBuilder.() -> Unit)
 
     /**
      * Defines a link to a user without any styling.
@@ -39,7 +39,7 @@ interface RichTextElementDsl {
     /**
      * Defines an emoji with text styling.
      */
-    fun emoji(builder: RichTextElementEmojiBuilder.() -> Unit)
+    fun emoji(builder: RichTextSectionElementEmojiBuilder.() -> Unit)
 
     /**
      * Defines an emoji without any text styling.
@@ -49,12 +49,12 @@ interface RichTextElementDsl {
     /**
      * Defines a link to an external webpage.
      */
-    fun link(builder: RichTextElementLinkBuilder.() -> Unit)
+    fun link(builder: RichTextSectionElementLinkBuilder.() -> Unit)
 
     /**
      * Defines a link to another slack team with text styling.
      */
-    fun team(builder: RichTextElementTeamBuilder.() -> Unit)
+    fun team(builder: RichTextSectionElementTeamBuilder.() -> Unit)
 
     /**
      * Defines a link to another slack team without any text styling.

@@ -7,23 +7,32 @@ import com.slack.api.model.kotlin_extension.block.element.container.SingleRichTe
 import com.slack.api.model.kotlin_extension.block.element.dsl.RichTextStyleDsl
 
 @BlockLayoutBuilder
-class RichTextElementTextBuilder private constructor(
+class RichTextSectionElementLinkBuilder private constructor(
         private val styleContainer: SingleRichTextStyleContainer
-) : Builder<RichTextSectionElement.Text>, RichTextStyleDsl by styleContainer {
+) : Builder<RichTextSectionElement.Link>, RichTextStyleDsl by styleContainer {
+    private var url: String? = null
     private var text: String? = null
 
     constructor() : this(SingleRichTextStyleContainer())
 
     /**
-     * The rendered text.
+     * The URL to redirect to when this link is clicked.
      */
-    fun text(containedText: String) {
-        text = containedText
+    fun url(url: String) {
+        this.url = url
     }
 
-    override fun build(): RichTextSectionElement.Text {
-        return RichTextSectionElement.Text.builder()
+    /**
+     * The text shown for the hyperlink.
+     */
+    fun text(text: String) {
+        this.text = text
+    }
+
+    override fun build(): RichTextSectionElement.Link {
+        return RichTextSectionElement.Link.builder()
                 .style(styleContainer.underlying)
+                .url(url)
                 .text(text)
                 .build()
     }

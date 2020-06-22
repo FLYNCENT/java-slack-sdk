@@ -7,7 +7,7 @@ import com.slack.api.model.kotlin_extension.block.element.container.SingleRichTe
 import com.slack.api.model.kotlin_extension.block.element.dsl.RichTextStyleDsl
 
 @BlockLayoutBuilder
-class RichTextElementUserBuilder private constructor(
+class RichTextSectionElementUserBuilder private constructor(
         private val styleContainer: SingleRichTextStyleContainer
 ) : Builder<RichTextSectionElement.User>, RichTextStyleDsl by styleContainer {
     private var userId: String? = null

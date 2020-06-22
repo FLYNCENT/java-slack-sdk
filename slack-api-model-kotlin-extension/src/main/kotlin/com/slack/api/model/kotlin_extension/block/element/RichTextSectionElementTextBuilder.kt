@@ -7,24 +7,24 @@ import com.slack.api.model.kotlin_extension.block.element.container.SingleRichTe
 import com.slack.api.model.kotlin_extension.block.element.dsl.RichTextStyleDsl
 
 @BlockLayoutBuilder
-class RichTextElementChannelBuilder private constructor(
+class RichTextSectionElementTextBuilder private constructor(
         private val styleContainer: SingleRichTextStyleContainer
-) : Builder<RichTextSectionElement.Channel>, RichTextStyleDsl by styleContainer {
-    private var channelId: String? = null
+) : Builder<RichTextSectionElement.Text>, RichTextStyleDsl by styleContainer {
+    private var text: String? = null
 
     constructor() : this(SingleRichTextStyleContainer())
 
     /**
-     * The ID of the channel to reference.
+     * The rendered text.
      */
-    fun channelId(id: String) {
-        channelId = id
+    fun text(containedText: String) {
+        text = containedText
     }
 
-    override fun build(): RichTextSectionElement.Channel {
-        return RichTextSectionElement.Channel.builder()
+    override fun build(): RichTextSectionElement.Text {
+        return RichTextSectionElement.Text.builder()
                 .style(styleContainer.underlying)
-                .channelId(channelId)
+                .text(text)
                 .build()
     }
 }

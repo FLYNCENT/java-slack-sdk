@@ -14,6 +14,7 @@ class MultiConversationsSelectElementBuilder : Builder<MultiConversationsSelectE
     private var actionId: String? = null
     private var initialConversations: List<String>? = null
     private var maxSelectedItems: Int? = null
+    private var defaultToCurrentConversation: Boolean? = null
     private var filter: ConversationsFilter? = null
     private var confirm: ConfirmationDialogObject? = null
 
@@ -55,6 +56,16 @@ class MultiConversationsSelectElementBuilder : Builder<MultiConversationsSelectE
      */
     fun maxSelectedItems(items: Int) {
         maxSelectedItems = items
+    }
+
+    /**
+     * Pre-populates the select menu with the conversation that the user was viewing when they opened the modal,
+     * if available. If initial_conversations is also supplied, it will be ignored. Default is false.
+     *
+     * @see <a href="https://api.slack.com/reference/block-kit/block-elements#conversation_multi_select">Multi conversations select element documentation</a>
+     */
+    fun defaultToCurrentConversation(defaultToCurrentConversation: Boolean) {
+        this.defaultToCurrentConversation = defaultToCurrentConversation
     }
 
     /**
@@ -105,6 +116,7 @@ class MultiConversationsSelectElementBuilder : Builder<MultiConversationsSelectE
                 .initialConversations(initialConversations)
                 .confirm(confirm)
                 .maxSelectedItems(maxSelectedItems)
+                .defaultToCurrentConversation(defaultToCurrentConversation)
                 .filter(filter)
                 .build()
     }
