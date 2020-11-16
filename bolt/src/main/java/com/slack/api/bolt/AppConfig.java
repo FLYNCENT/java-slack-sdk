@@ -150,6 +150,9 @@ public class AppConfig {
     // https://api.slack.com/authentication/migration
     private boolean classicAppPermissionsEnabled = false;
 
+    @Builder.Default
+    private boolean enterpriseInstallEnabled = false;
+
     /**
      * The thread pool size for the built-in handy executor service.
      */

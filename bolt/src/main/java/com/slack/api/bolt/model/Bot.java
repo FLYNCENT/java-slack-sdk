@@ -9,6 +9,10 @@ public interface Bot {
 
     void setAppId(String appId);
 
+    boolean isEnterpriseInstall();
+
+    void setEnterpriseInstall(boolean isEnterpriseInstall);
+
     String getEnterpriseId();
 
     void setEnterpriseId(String enterpriseId);

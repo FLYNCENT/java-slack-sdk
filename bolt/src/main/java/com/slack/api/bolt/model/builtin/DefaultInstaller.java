@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 public class DefaultInstaller implements Installer {
 
     private String appId;
-
+    private boolean enterpriseInstall;
     private String enterpriseId;
     private String teamId;
     private String teamName;
@@ -45,6 +45,7 @@ public class DefaultInstaller implements Installer {
     public Bot toBot() {
         DefaultBot bot = new DefaultBot();
         bot.setAppId(appId);
+        bot.setEnterpriseInstall(enterpriseInstall);
         bot.setEnterpriseId(enterpriseId);
         bot.setTeamId(teamId);
         bot.setTeamName(teamName);

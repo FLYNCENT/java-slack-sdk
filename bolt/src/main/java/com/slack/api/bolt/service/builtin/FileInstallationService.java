@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.joining;
 
@@ -25,6 +26,7 @@ public class FileInstallationService implements InstallationService {
     private final AppConfig config;
     private final String rootDir;
     private boolean historicalDataEnabled;
+    private boolean enterpriseInstallEnabled;
 
     public FileInstallationService(AppConfig config) {
         this(config, DEFAULT_ROOT_DIR);
@@ -33,6 +35,7 @@ public class FileInstallationService implements InstallationService {
     public FileInstallationService(AppConfig config, String rootDir) {
         this.config = config;
         this.rootDir = rootDir;
+        this.enterpriseInstallEnabled = config.isEnterpriseInstallEnabled();
     }
 
     @Override
@@ -70,6 +73,17 @@ public class FileInstallationService implements InstallationService {
     public Bot findBot(String enterpriseId, String teamId) {
         try {
             String json = null;
+            if (enterpriseInstallEnabled && enterpriseId != null) {
+                // try finding org-level bot token first
+                try {
+                    json = loadFileContent(getBotPath(enterpriseId, null));
+                } catch (IOException e) {
+                }
+                if (json != null) {
+                    return JsonOps.fromJson(json, DefaultBot.class);
+                }
+                // not found - going to find workspace level installation
+            }
             try {
                 json = loadFileContent(getBotPath(enterpriseId, teamId));
             } catch (IOException e) {
@@ -98,6 +112,17 @@ public class FileInstallationService implements InstallationService {
     public Installer findInstaller(String enterpriseId, String teamId, String userId) {
         try {
             String json = null;
+            if (enterpriseInstallEnabled && enterpriseId != null) {
+                // try finding org-level user token first
+                try {
+                    json = loadFileContent(getInstallerPath(enterpriseId, null, userId));
+                } catch (IOException e) {
+                }
+                if (json != null) {
+                    return JsonOps.fromJson(json, DefaultInstaller.class);
+                }
+                // not found - going to find workspace level installation
+            }
             try {
                 json = loadFileContent(getInstallerPath(enterpriseId, teamId, userId));
             } catch (IOException e) {
@@ -132,7 +157,11 @@ public class FileInstallationService implements InstallationService {
         if (!Files.exists(dirPath)) {
             Files.createDirectories(dirPath);
         }
-        String key = ((enterpriseId == null) ? "none" : enterpriseId) + "-" + teamId + "-" + userId;
+        String key = Optional.ofNullable(enterpriseId).orElse("none")
+                + "-"
+                + Optional.ofNullable(teamId).orElse("none")
+                + "-"
+                + userId;
         if (isHistoricalDataEnabled()) {
             key = key + "-latest";
         }
@@ -145,7 +174,9 @@ public class FileInstallationService implements InstallationService {
         if (!Files.exists(dirPath)) {
             Files.createDirectories(dirPath);
         }
-        String key = ((enterpriseId == null) ? "none" : enterpriseId) + "-" + teamId;
+        String key = Optional.ofNullable(enterpriseId).orElse("none")
+                + "-"
+                + Optional.ofNullable(teamId).orElse("none");
         if (isHistoricalDataEnabled()) {
             key = key + "-latest";
         }
