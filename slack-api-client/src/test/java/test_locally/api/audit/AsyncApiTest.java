@@ -2,7 +2,7 @@ package test_locally.api.audit;
 
 import com.slack.api.Slack;
 import com.slack.api.SlackConfig;
-import com.slack.api.audit.AuditClient;
+import com.slack.api.audit.AsyncAuditClient;
 import com.slack.api.audit.AuditConfig;
 import com.slack.api.audit.response.LogsResponse;
 import com.slack.api.rate_limits.metrics.MetricsDatastore;
@@ -32,7 +32,7 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @Slf4j
-public class ApiTest {
+public class AsyncApiTest {
 
     public static final String ValidToken = "xoxb-this-is-valid";
     public static final String InvalidToken = "xoxb-this-is-INVALID";
@@ -84,7 +84,7 @@ public class ApiTest {
         }
     }
 
-    int port = PortProvider.getPort(ApiTest.class.getName());
+    int port = PortProvider.getPort(AsyncApiTest.class.getName());
     Server server = new Server(port);
 
     {
@@ -110,13 +110,13 @@ public class ApiTest {
         config.setAuditEndpointUrlPrefix("http://localhost:" + port + "/api/");
 
         config.setAuditConfig(new AuditConfig());
-        config.getAuditConfig().setExecutorName("getLogs" + System.currentTimeMillis());
+        config.getAuditConfig().setExecutorName("getActions" + System.currentTimeMillis());
         MetricsDatastore datastore = config.getAuditConfig().getMetricsDatastore();
         RequestStats stats = datastore.getStats(config.getAuditConfig().getExecutorName(), "T1234567");
         assertThat(stats.getAllCompletedCalls().get("logs"), is(nullValue()));
 
-        AuditClient audit = Slack.getInstance(config).audit(ValidToken);
-        LogsResponse response = audit.getLogs(r -> r.action("something"));
+        AsyncAuditClient audit = Slack.getInstance(config).auditAsync(ValidToken);
+        LogsResponse response = audit.getLogs(r -> r.action("something")).get();
         assertThat(response.isOk(), is(true));
 
         stats = datastore.getStats(config.getAuditConfig().getExecutorName(), "T1234567");
@@ -130,13 +130,13 @@ public class ApiTest {
         config.setAuditEndpointUrlPrefix("http://localhost:" + port + "/api/");
 
         config.setAuditConfig(new AuditConfig());
-        config.getAuditConfig().setExecutorName("getSchemas" + System.currentTimeMillis());
+        config.getAuditConfig().setExecutorName("getActions" + System.currentTimeMillis());
         MetricsDatastore datastore = config.getAuditConfig().getMetricsDatastore();
         RequestStats stats = datastore.getStats(config.getAuditConfig().getExecutorName(), "T1234567");
         assertThat(stats.getAllCompletedCalls().get("schemas"), is(nullValue()));
 
-        AuditClient audit = Slack.getInstance(config).audit(ValidToken);
-        assertThat(audit.getSchemas().isOk(), is(true));
+        AsyncAuditClient audit = Slack.getInstance(config).auditAsync(ValidToken);
+        assertThat(audit.getSchemas().get().isOk(), is(true));
 
         stats = datastore.getStats(config.getAuditConfig().getExecutorName(), "T1234567");
         assertThat(stats.getAllCompletedCalls().get("schemas"), is(1L));
@@ -154,8 +154,8 @@ public class ApiTest {
         RequestStats stats = datastore.getStats(config.getAuditConfig().getExecutorName(), "T1234567");
         assertThat(stats.getAllCompletedCalls().get("actions"), is(nullValue()));
 
-        AuditClient audit = Slack.getInstance(config).audit(ValidToken);
-        assertThat(audit.getActions().isOk(), is(true));
+        AsyncAuditClient audit = Slack.getInstance(config).auditAsync(ValidToken);
+        assertThat(audit.getActions().get().isOk(), is(true));
 
         stats = datastore.getStats(config.getAuditConfig().getExecutorName(), "T1234567");
         assertThat(stats.getAllCompletedCalls().get("actions"), is(1L));

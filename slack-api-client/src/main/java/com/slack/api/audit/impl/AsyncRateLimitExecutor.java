@@ -1,7 +1,15 @@
-package com.slack.api.methods.impl;
+package com.slack.api.audit.impl;
 
 import com.slack.api.SlackConfig;
-import com.slack.api.methods.*;
+import com.slack.api.audit.AuditApiCompletionException;
+import com.slack.api.audit.AuditApiException;
+import com.slack.api.audit.AuditApiResponse;
+import com.slack.api.audit.AuditConfig;
+import com.slack.api.methods.MethodsCompletionException;
+import com.slack.api.methods.SlackApiException;
+import com.slack.api.methods.SlackApiResponse;
+import com.slack.api.methods.impl.MethodsClientImpl;
+import com.slack.api.methods.impl.TeamIdCache;
 import com.slack.api.rate_limits.metrics.MetricsDatastore;
 import com.slack.api.rate_limits.queue.MessageIdGenerator;
 import com.slack.api.rate_limits.queue.MessageIdGeneratorUUIDImpl;
@@ -18,15 +26,15 @@ public class AsyncRateLimitExecutor {
 
     private static final ConcurrentMap<String, AsyncRateLimitExecutor> ALL_EXECUTORS = new ConcurrentHashMap<>();
 
-    private MethodsConfig config;
+    private AuditConfig config;
     private MetricsDatastore metricsDatastore; // intentionally mutable
     private final TeamIdCache teamIdCache;
     private final MessageIdGenerator messageIdGenerator;
 
-    private AsyncRateLimitExecutor(MethodsClientImpl clientImpl, SlackConfig config) {
-        this.config = config.getMethodsConfig();
-        this.metricsDatastore = config.getMethodsConfig().getMetricsDatastore();
-        this.teamIdCache = new TeamIdCache(clientImpl);
+    private AsyncRateLimitExecutor(MethodsClientImpl methods, SlackConfig config) {
+        this.config = config.getAuditConfig();
+        this.metricsDatastore = config.getAuditConfig().getMetricsDatastore();
+        this.teamIdCache = new TeamIdCache(methods);
         this.messageIdGenerator = new MessageIdGeneratorUUIDImpl();
     }
 
@@ -34,28 +42,23 @@ public class AsyncRateLimitExecutor {
         return ALL_EXECUTORS.get(executorName);
     }
 
-    public static AsyncRateLimitExecutor getOrCreate(MethodsClientImpl client, SlackConfig config) {
+    public static AsyncRateLimitExecutor getOrCreate(MethodsClientImpl methods, SlackConfig config) {
         AsyncRateLimitExecutor executor = ALL_EXECUTORS.get(config.getMethodsConfig().getExecutorName());
         if (executor != null && executor.metricsDatastore != config.getMethodsConfig().getMetricsDatastore()) {
             // As the metrics datastore has been changed, we should replace the executor
-            executor.config = config.getMethodsConfig();
-            executor.metricsDatastore = config.getMethodsConfig().getMetricsDatastore();
+            executor.config = config.getAuditConfig();
+            executor.metricsDatastore = config.getAuditConfig().getMetricsDatastore();
         }
         if (executor == null) {
-            executor = new AsyncRateLimitExecutor(client, config);
+            executor = new AsyncRateLimitExecutor(methods, config);
             ALL_EXECUTORS.putIfAbsent(config.getMethodsConfig().getExecutorName(), executor);
         }
         return executor;
     }
 
-    private static final List<String> NO_TOKEN_METHOD_NAMES = Arrays.asList(
-            Methods.API_TEST,
-            Methods.OAUTH_ACCESS,
-            Methods.OAUTH_TOKEN,
-            Methods.OAUTH_V2_ACCESS
-    );
+    private static final List<String> NO_TOKEN_METHOD_NAMES = Arrays.asList("schemas", "actions");
 
-    public <T extends SlackApiResponse> CompletableFuture<T> execute(
+    public <T extends AuditApiResponse> CompletableFuture<T> execute(
             String methodName,
             Map<String, String> params,
             AsyncExecutionSupplier<T> methodsSupplier) {
@@ -63,13 +66,12 @@ public class AsyncRateLimitExecutor {
         final String teamId = token != null ? teamIdCache.lookupOrResolve(token) : null;
         final ExecutorService executorService = teamId != null ? ThreadPools.getOrCreate(config, teamId) : ThreadPools.getDefault(config);
         return CompletableFuture.supplyAsync(() -> {
+            String messageId = messageIdGenerator.generate();
+            addMessageId(teamId, methodName, messageId);
+            initCurrentQueueSizeStatsIfAbsent(teamId, methodName);
             if (NO_TOKEN_METHOD_NAMES.contains(methodName) || teamId == null) {
                 return runWithoutQueue(teamId, methodName, methodsSupplier);
             } else {
-                String messageId = messageIdGenerator.generate();
-                String methodNameWithSuffix = toMethodNameWithSuffix(methodName, params);
-                addMessageId(teamId, methodNameWithSuffix, messageId);
-                initCurrentQueueSizeStatsIfAbsent(teamId, methodNameWithSuffix);
                 return enqueueThenRun(
                         messageId,
                         teamId,
@@ -103,15 +105,7 @@ public class AsyncRateLimitExecutor {
                 config.getExecutorName(), teamId, methodNameWithSuffix, messageId);
     }
 
-    private String toMethodNameWithSuffix(String methodName, Map<String, String> params) {
-        String methodNameWithSuffix = methodName;
-        if (methodName.equals(Methods.CHAT_POST_MESSAGE)) {
-            methodNameWithSuffix = Methods.CHAT_POST_MESSAGE + "_" + params.get("channel");
-        }
-        return methodNameWithSuffix;
-    }
-
-    private <T extends SlackApiResponse> T runWithoutQueue(
+    private <T extends AuditApiResponse> T runWithoutQueue(
             String teamId,
             String methodName,
             AsyncExecutionSupplier<T> methodsSupplier) {
@@ -121,13 +115,13 @@ public class AsyncRateLimitExecutor {
             return handleRuntimeException(teamId, methodName, e);
         } catch (IOException e) {
             return handleIOException(teamId, methodName, e);
-        } catch (SlackApiException e) {
-            logSlackApiException(teamId, methodName, e);
-            throw new MethodsCompletionException(null, e, null);
+        } catch (AuditApiException e) {
+            logAuditApiException(teamId, methodName, e);
+            throw new AuditApiCompletionException(null, e, null);
         }
     }
 
-    private <T extends SlackApiResponse> T enqueueThenRun(
+    private <T extends AuditApiResponse> T enqueueThenRun(
             String messageId,
             String teamId,
             String methodName,
@@ -146,7 +140,7 @@ public class AsyncRateLimitExecutor {
                 consumedMillis += 10;
                 supplier = (AsyncExecutionSupplier<T>) activeQueue.dequeueIfReady(
                         messageId, teamId, methodName, params);
-                removeMessageId(teamId, toMethodNameWithSuffix(methodName, params), messageId);
+                removeMessageId(teamId, methodName, messageId);
             }
             if (supplier == null) {
                 activeQueue.remove(methodName, messageId);
@@ -159,29 +153,29 @@ public class AsyncRateLimitExecutor {
             return handleRuntimeException(teamId, methodName, e);
         } catch (IOException e) {
             return handleIOException(teamId, methodName, e);
-        } catch (SlackApiException e) {
-            logSlackApiException(teamId, methodName, e);
+        } catch (AuditApiException e) {
+            logAuditApiException(teamId, methodName, e);
             if (e.getResponse().code() == 429) {
                 return enqueueThenRun(messageId, teamId, methodName, params, methodsSupplier);
             }
-            throw new MethodsCompletionException(null, e, null);
+            throw new AuditApiCompletionException(null, e, null);
         } catch (InterruptedException e) {
             log.error("Got an InterruptedException (error: {})", e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }
 
-    private static <T extends SlackApiTextResponse> T handleRuntimeException(String teamId, String methodName, RuntimeException e) {
+    private static <T extends AuditApiResponse> T handleRuntimeException(String teamId, String methodName, RuntimeException e) {
         log.error("Got an exception while calling {} API (team: {}, error: {})", methodName, teamId, e.getMessage(), e);
-        throw new MethodsCompletionException(null, null, e);
+        throw new AuditApiCompletionException(null, null, e);
     }
 
-    private static <T extends SlackApiTextResponse> T handleIOException(String teamId, String methodName, IOException e) {
+    private static <T extends AuditApiResponse> T handleIOException(String teamId, String methodName, IOException e) {
         log.error("Failed to connect to {} API (team: {}, error: {})", methodName, teamId, e.getMessage(), e);
-        throw new MethodsCompletionException(e, null, null);
+        throw new AuditApiCompletionException(e, null, null);
     }
 
-    private static void logSlackApiException(String teamId, String methodName, SlackApiException e) {
+    private static void logAuditApiException(String teamId, String methodName, AuditApiException e) {
         if (e.getResponse().code() == 429) {
             String retryAfterSeconds = e.getResponse().header("Retry-After");
             log.error("Got a rate-limited response from {} API (team: {}, error: {}, retry-after: {})",

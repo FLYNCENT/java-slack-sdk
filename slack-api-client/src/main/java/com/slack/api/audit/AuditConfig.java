@@ -1,6 +1,6 @@
-package com.slack.api.methods;
+package com.slack.api.audit;
 
-import com.slack.api.methods.metrics.MemoryMetricsDatastore;
+import com.slack.api.audit.metrics.MemoryMetricsDatastore;
 import com.slack.api.rate_limits.metrics.MetricsDatastore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,13 +11,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Configuration for {@link MethodsClient}.
+ * Configuration for {@link AuditClient}.
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MethodsConfig {
+public class AuditConfig {
 
     /**
      * If you don't have a special reason, we recommend going with the singleton executor to track all the traffic
@@ -28,7 +28,7 @@ public class MethodsConfig {
     /**
      * The default configuration. It's not allowed to modify this runtime for any reasons.
      */
-    public static final MethodsConfig DEFAULT_SINGLETON = new MethodsConfig() {
+    public static final AuditConfig DEFAULT_SINGLETON = new AuditConfig() {
 
         void throwException() {
             throw new UnsupportedOperationException("This config is immutable");

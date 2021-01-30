@@ -1,6 +1,7 @@
 package com.slack.api;
 
 import com.slack.api.audit.AuditClient;
+import com.slack.api.audit.AuditConfig;
 import com.slack.api.methods.MethodsClient;
 import com.slack.api.methods.MethodsConfig;
 import com.slack.api.scim.SCIMClient;
@@ -81,6 +82,11 @@ public class SlackConfig {
 
         @Override
         public void setMethodsConfig(MethodsConfig methodsConfig) {
+            throwException();
+        }
+
+        @Override
+        public void setAuditConfig(AuditConfig auditConfig) {
             throwException();
         }
 
@@ -182,4 +188,5 @@ public class SlackConfig {
 
     private MethodsConfig methodsConfig = MethodsConfig.DEFAULT_SINGLETON;
 
+    private AuditConfig auditConfig = AuditConfig.DEFAULT_SINGLETON;
 }

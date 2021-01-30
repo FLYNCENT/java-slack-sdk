@@ -1,7 +1,7 @@
-package com.slack.api.methods.impl;
+package com.slack.api.audit.impl;
 
-import com.slack.api.methods.MethodsConfig;
-import com.slack.api.methods.SlackApiResponse;
+import com.slack.api.audit.AuditApiResponse;
+import com.slack.api.audit.AuditConfig;
 import com.slack.api.rate_limits.WaitTime;
 import com.slack.api.rate_limits.queue.QueueMessage;
 import com.slack.api.rate_limits.queue.RateLimitQueue;
@@ -11,11 +11,21 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.LinkedBlockingQueue;
 
 @Slf4j
 public class AsyncRateLimitQueue extends RateLimitQueue<
-        AsyncExecutionSupplier<? extends SlackApiResponse>,
-        AsyncRateLimitQueue.Message> {
+        AsyncExecutionSupplier<? extends AuditApiResponse>,
+        AsyncRateLimitQueue.AuditMessage> {
+
+    @Data
+    @AllArgsConstructor
+    public static class AuditMessage extends QueueMessage<AsyncExecutionSupplier> {
+        private String id;
+        private long millisToRun;
+        private WaitTime waitTime;
+        private AsyncExecutionSupplier<?> supplier;
+    }
 
     // Executor name -> Team ID -> Queue
     private static final ConcurrentMap<String, ConcurrentMap<String, AsyncRateLimitQueue>> ALL_QUEUES = new ConcurrentHashMap<>();
@@ -29,14 +39,20 @@ public class AsyncRateLimitQueue extends RateLimitQueue<
         return teamIdToQueue;
     }
 
-    private AsyncMethodsRateLimiter rateLimiter; // intentionally mutable
+    private AsyncAuditRateLimiter rateLimiter; // intentionally mutable
 
-    private AsyncRateLimitQueue(MethodsConfig config) {
-        this.rateLimiter = new AsyncMethodsRateLimiter(config);
+    public AsyncAuditRateLimiter getRateLimiter() {
+        return rateLimiter;
     }
 
-    public void setRateLimiter(AsyncMethodsRateLimiter rateLimiter) {
+    public void setRateLimiter(AsyncAuditRateLimiter rateLimiter) {
         this.rateLimiter = rateLimiter;
+    }
+
+    private final ConcurrentMap<String, LinkedBlockingQueue<AuditMessage>> methodNameToActiveQueue = new ConcurrentHashMap<>();
+
+    private AsyncRateLimitQueue(AuditConfig config) {
+        this.rateLimiter = new AsyncAuditRateLimiter(config);
     }
 
     public static AsyncRateLimitQueue get(String executorName, String teamId) {
@@ -47,7 +63,7 @@ public class AsyncRateLimitQueue extends RateLimitQueue<
         return teamIdToQueue.get(teamId);
     }
 
-    public static AsyncRateLimitQueue getOrCreate(MethodsConfig config, String teamId) {
+    public static AsyncRateLimitQueue getOrCreate(AuditConfig config, String teamId) {
         if (teamId == null) {
             throw new IllegalArgumentException("`teamId` is required");
         }
@@ -55,7 +71,7 @@ public class AsyncRateLimitQueue extends RateLimitQueue<
         AsyncRateLimitQueue queue = teamIdToQueue.get(teamId);
         if (queue != null && queue.getRateLimiter().getMetricsDatastore() != config.getMetricsDatastore()) {
             // As the metrics datastore has been changed, we should replace the executor
-            queue.setRateLimiter(new AsyncMethodsRateLimiter(config));
+            queue.setRateLimiter(new AsyncAuditRateLimiter(config));
         }
         if (queue == null) {
             queue = new AsyncRateLimitQueue(config);
@@ -64,23 +80,14 @@ public class AsyncRateLimitQueue extends RateLimitQueue<
         return queue;
     }
 
-    @Data
-    @AllArgsConstructor
-    public static class Message extends QueueMessage<AsyncExecutionSupplier<? extends SlackApiResponse>> {
-        private String id;
-        private long millisToRun;
-        private WaitTime waitTime;
-        private AsyncExecutionSupplier<?> supplier;
-    }
-
     @Override
-    protected AsyncMethodsRateLimiter getRateLimiter() {
-        return this.rateLimiter;
-    }
-
-    @Override
-    protected Message buildNewMessage(String messageId, long epochMillisToRun, WaitTime waitTime, AsyncExecutionSupplier<? extends SlackApiResponse> methodsSupplier) {
-        return new Message(messageId, epochMillisToRun, waitTime, methodsSupplier);
+    protected AuditMessage buildNewMessage(
+            String messageId,
+            long epochMillisToRun,
+            WaitTime waitTime,
+            AsyncExecutionSupplier<? extends AuditApiResponse> methodsSupplier
+    ) {
+        return new AuditMessage(messageId, epochMillisToRun, waitTime, methodsSupplier);
     }
 
 }
