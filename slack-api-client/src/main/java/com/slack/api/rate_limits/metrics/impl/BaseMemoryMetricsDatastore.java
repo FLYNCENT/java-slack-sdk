@@ -218,6 +218,9 @@ public abstract class BaseMemoryMetricsDatastore<SUPPLIER, MSG extends QueueMess
 
     private LiveRequestStats getOrCreateTeamLiveStats(String executorName, String teamId) {
         ConcurrentMap<String, LiveRequestStats> executor = getOrCreateExecutorLiveStats(executorName);
+        if (teamId == null) {
+            teamId = "-";
+        }
         if (executor.get(teamId) == null) {
             executor.putIfAbsent(teamId, new LiveRequestStats());
         }

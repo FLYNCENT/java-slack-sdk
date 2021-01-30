@@ -2,6 +2,7 @@ package test_locally.api.scim;
 
 import com.slack.api.Slack;
 import com.slack.api.SlackConfig;
+import com.slack.api.scim.AsyncSCIMClient;
 import com.slack.api.scim.SCIMClient;
 import com.slack.api.scim.model.Group;
 import com.slack.api.scim.model.User;
@@ -36,14 +37,14 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class ApiTest {
+public class AsyncApiTest {
 
     public static final String ValidToken = "xoxb-this-is-valid";
     public static final String InvalidToken = "xoxb-this-is-INVALID";
 
     private static final FileReader reader = new FileReader("../json-logs/samples/scim/v1/");
 
-    private static final Logger logger = LoggerFactory.getLogger(ApiTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(AsyncApiTest.class);
 
     @Slf4j
     @WebServlet
@@ -94,7 +95,7 @@ public class ApiTest {
         }
     }
 
-    int port = PortProvider.getPort(ApiTest.class.getName());
+    int port = PortProvider.getPort(AsyncApiTest.class.getName());
     Server server = new Server(port);
 
     {
@@ -109,7 +110,6 @@ public class ApiTest {
     public void setup() throws Exception {
         server.start();
         config = new SlackConfig();
-        config.setPrettyResponseLoggingEnabled(true);
         config.setMethodsEndpointUrlPrefix("http://localhost:" + port + "/api/");
         config.setScimEndpointUrlPrefix("http://localhost:" + port + "/api/");
         config.getHttpClientResponseHandlers().add(new HttpResponseListener() {
@@ -128,108 +128,110 @@ public class ApiTest {
 
     @Test
     public void searchUsers() throws Exception {
-        SCIMClient scim = Slack.getInstance(config).scim(ValidToken);
-        UsersSearchResponse response = scim.searchUsers(r -> r.filter("some filter").count(123).startIndex(1));
+        AsyncSCIMClient scim = Slack.getInstance(config).scimAsync(ValidToken);
+        UsersSearchResponse response = scim.searchUsers(r -> r
+                .filter("some filter").count(123).startIndex(1)).get();
         assertThat(response, is(notNullValue()));
     }
 
     @Test
     public void searchGroups() throws Exception {
-        SCIMClient scim = Slack.getInstance(config).scim(ValidToken);
-        GroupsSearchResponse response = scim.searchGroups(r -> r.filter("some filter").count(123).startIndex(1));
+        AsyncSCIMClient scim = Slack.getInstance(config).scimAsync(ValidToken);
+        GroupsSearchResponse response = scim.searchGroups(r -> r
+                .filter("some filter").count(123).startIndex(1)).get();
         assertThat(response, is(notNullValue()));
     }
 
     @Test
     public void getServiceProviderConfigs() throws Exception {
-        SCIMClient scim = Slack.getInstance(config).scim(ValidToken);
-        ServiceProviderConfigsGetResponse response = scim.getServiceProviderConfigs(r -> r);
+        AsyncSCIMClient scim = Slack.getInstance(config).scimAsync(ValidToken);
+        ServiceProviderConfigsGetResponse response = scim.getServiceProviderConfigs(r -> r).get();
         assertThat(response, is(notNullValue()));
     }
 
     @Test
     public void readUser() throws Exception {
-        SCIMClient scim = Slack.getInstance(config).scim(ValidToken);
-        UsersReadResponse response = scim.readUser(r -> r.id("00000000000"));
+        AsyncSCIMClient scim = Slack.getInstance(config).scimAsync(ValidToken);
+        UsersReadResponse response = scim.readUser(r -> r.id("00000000000")).get();
         assertThat(response, is(notNullValue()));
         assertThat(response.getId(), is("W00000000"));
     }
 
     @Test
     public void createUser() throws Exception {
-        SCIMClient scim = Slack.getInstance(config).scim(ValidToken);
+        AsyncSCIMClient scim = Slack.getInstance(config).scimAsync(ValidToken);
         User user = new User();
         user.setUserName("Kazuhiro Sera");
-        UsersCreateResponse response = scim.createUser(r -> r.user(user));
+        UsersCreateResponse response = scim.createUser(r -> r.user(user)).get();
         assertThat(response, is(notNullValue()));
         assertThat(response.getId(), is("W00000000"));
     }
 
     @Test
     public void patchUser() throws Exception {
-        SCIMClient scim = Slack.getInstance(config).scim(ValidToken);
+        AsyncSCIMClient scim = Slack.getInstance(config).scimAsync(ValidToken);
         User user = new User();
         user.setUserName("Kazuhiro Sera");
-        UsersPatchResponse response = scim.patchUser(r -> r.id("00000000000").user(user));
+        UsersPatchResponse response = scim.patchUser(r -> r.id("00000000000").user(user)).get();
         assertThat(response, is(notNullValue()));
     }
 
     @Test
     public void updateUser() throws Exception {
-        SCIMClient scim = Slack.getInstance(config).scim(ValidToken);
+        AsyncSCIMClient scim = Slack.getInstance(config).scimAsync(ValidToken);
         User user = new User();
         user.setUserName("Kazuhiro Sera");
-        UsersUpdateResponse response = scim.updateUser(r -> r.id("00000000000").user(user));
+        UsersUpdateResponse response = scim.updateUser(r -> r.id("00000000000").user(user)).get();
         assertThat(response, is(notNullValue()));
     }
 
     @Test
     public void deleteUser() throws Exception {
-        SCIMClient scim = Slack.getInstance(config).scim(ValidToken);
-        UsersDeleteResponse response = scim.deleteUser(r -> r.id("00000000000"));
+        AsyncSCIMClient scim = Slack.getInstance(config).scimAsync(ValidToken);
+        UsersDeleteResponse response = scim.deleteUser(r -> r.id("00000000000")).get();
         assertThat(response, is(notNullValue()));
     }
 
     @Test
     public void readGroup() throws Exception {
-        SCIMClient scim = Slack.getInstance(config).scim(ValidToken);
-        GroupsReadResponse response = scim.readGroup(r -> r.id("00000000000"));
+        AsyncSCIMClient scim = Slack.getInstance(config).scimAsync(ValidToken);
+        GroupsReadResponse response = scim.readGroup(r -> r.id("00000000000")).get();
         assertThat(response, is(notNullValue()));
         assertThat(response.getId(), is("S00000000"));
     }
 
     @Test
     public void createGroup() throws Exception {
-        SCIMClient scim = Slack.getInstance(config).scim(ValidToken);
+        AsyncSCIMClient scim = Slack.getInstance(config).scimAsync(ValidToken);
         Group group = new Group();
         group.setDisplayName("Kazuhiro Sera");
-        GroupsCreateResponse response = scim.createGroup(r -> r.group(group));
+        GroupsCreateResponse response = scim.createGroup(r -> r.group(group)).get();
         assertThat(response, is(notNullValue()));
         assertThat(response.getId(), is("S00000000"));
     }
 
     @Test
     public void patchGroup() throws Exception {
-        SCIMClient scim = Slack.getInstance(config).scim(ValidToken);
+        AsyncSCIMClient scim = Slack.getInstance(config).scimAsync(ValidToken);
         GroupsPatchRequest.GroupOperation group = new GroupsPatchRequest.GroupOperation();
         group.setMembers(Arrays.asList());
-        GroupsPatchResponse response = scim.patchGroup(r -> r.id("00000000000").group(group));
+        GroupsPatchResponse response = scim.patchGroup(r -> r.id("00000000000").group(group)).get();
         assertThat(response, is(notNullValue()));
     }
 
     @Test
     public void updateGroup() throws Exception {
-        SCIMClient scim = Slack.getInstance(config).scim(ValidToken);
+        AsyncSCIMClient scim = Slack.getInstance(config).scimAsync(ValidToken);
         Group group = new Group();
         group.setDisplayName("Kazuhiro Sera");
-        GroupsUpdateResponse response = scim.updateGroup(r -> r.id("00000000000").group(group));
+        GroupsUpdateResponse response = scim.updateGroup(r -> r.id("00000000000").group(group)).get();
         assertThat(response, is(notNullValue()));
     }
 
     @Test
     public void deleteGroup() throws Exception {
-        SCIMClient scim = Slack.getInstance(config).scim(ValidToken);
-        GroupsDeleteResponse response = scim.deleteGroup(r -> r.id("00000000000"));
+        AsyncSCIMClient scim = Slack.getInstance(config).scimAsync(ValidToken);
+        GroupsDeleteResponse response = scim.deleteGroup(r -> r.id("00000000000")).get();
         assertThat(response, is(notNullValue()));
     }
 }

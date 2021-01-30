@@ -1,6 +1,6 @@
-package com.slack.api.audit.impl;
+package com.slack.api.scim.impl;
 
-import com.slack.api.audit.AuditConfig;
+import com.slack.api.scim.SCIMConfig;
 import com.slack.api.util.thread.ExecutorServiceFactory;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,11 +17,11 @@ public class ThreadPools {
     private ThreadPools() {
     }
 
-    public static ExecutorService getDefault(AuditConfig config) {
+    public static ExecutorService getDefault(SCIMConfig config) {
         return getOrCreate(config, null);
     }
 
-    public static ExecutorService getOrCreate(AuditConfig config, String teamId) {
+    public static ExecutorService getOrCreate(SCIMConfig config, String teamId) {
         String executorName = config.getExecutorName();
         Integer customPoolSize = teamId != null ? config.getCustomThreadPoolSizes().get(teamId) : null;
         if (customPoolSize != null) {
@@ -32,7 +32,8 @@ public class ThreadPools {
             }
             ExecutorService teamExecutor = allTeams.get(teamId);
             if (teamExecutor == null) {
-                String threadGroupName = "slack-audit-logs-" + config.getExecutorName() + "-" + teamId;
+                String threadGroupName = "slack-scim" +
+                        "-" + config.getExecutorName() + "-" + teamId;
                 teamExecutor = ExecutorServiceFactory.createDaemonThreadPoolExecutor(threadGroupName, customPoolSize);
                 allTeams.put(teamId, teamExecutor);
             }
@@ -41,7 +42,7 @@ public class ThreadPools {
         } else {
             ExecutorService defaultExecutor = ALL_DEFAULT.get(executorName);
             if (defaultExecutor == null) {
-                String threadGroupName = "slack-audit-logs-" + config.getExecutorName();
+                String threadGroupName = "slack-scim-" + config.getExecutorName();
                 int poolSize = config.getDefaultThreadPoolSize();
                 defaultExecutor = ExecutorServiceFactory.createDaemonThreadPoolExecutor(threadGroupName, poolSize);
                 ALL_DEFAULT.put(config.getExecutorName(), defaultExecutor);

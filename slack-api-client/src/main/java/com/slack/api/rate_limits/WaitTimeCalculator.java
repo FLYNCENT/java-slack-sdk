@@ -6,6 +6,8 @@ import com.slack.api.rate_limits.metrics.LastMinuteRequests;
 import com.slack.api.rate_limits.metrics.RequestPace;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Optional;
+
 import static com.slack.api.methods.MethodsRateLimitTier.SpecialTier_chat_postMessage;
 
 @Slf4j
@@ -14,6 +16,8 @@ public abstract class WaitTimeCalculator {
     public abstract Integer getNumberOfNodes();
 
     public abstract String getExecutorName();
+
+    public abstract Optional<Long> getRateLimitedMethodRetryEpochMillis(String executorName, String teamId, String key);
 
     public abstract Integer getNumberOfLastMinuteRequests(String executorName, String teamId, String key);
 

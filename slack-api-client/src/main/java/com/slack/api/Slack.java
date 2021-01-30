@@ -18,7 +18,10 @@ import com.slack.api.methods.response.rtm.RTMStartResponse;
 import com.slack.api.methods.response.users.UsersInfoResponse;
 import com.slack.api.model.User;
 import com.slack.api.rtm.RTMClient;
+import com.slack.api.scim.AsyncSCIMClient;
 import com.slack.api.scim.SCIMClient;
+import com.slack.api.scim.SCIMConfig;
+import com.slack.api.scim.impl.AsyncSCIMClientImpl;
 import com.slack.api.scim.impl.SCIMClientImpl;
 import com.slack.api.socket_mode.SocketModeClient;
 import com.slack.api.socket_mode.impl.SocketModeClientJavaWSImpl;
@@ -303,9 +306,35 @@ public class Slack implements AutoCloseable {
     }
 
     public SCIMClient scim(String token) {
-        SCIMClientImpl client = new SCIMClientImpl(httpClient, token);
+        MethodsClientImpl methods = new MethodsClientImpl(httpClient, token);
+        methods.setEndpointUrlPrefix(config.getMethodsEndpointUrlPrefix());
+        SCIMClientImpl client = new SCIMClientImpl(
+                config,
+                httpClient,
+                new TeamIdCache(methods), // will create a cache with enterprise_id
+                token);
         client.setEndpointUrlPrefix(config.getScimEndpointUrlPrefix());
         return client;
+    }
+
+    public AsyncSCIMClient scimAsync(String token) {
+        MethodsClientImpl methods = new MethodsClientImpl(httpClient, token);
+        methods.setEndpointUrlPrefix(config.getMethodsEndpointUrlPrefix());
+        SCIMClientImpl client = new SCIMClientImpl(
+                config,
+                httpClient,
+                new TeamIdCache(methods), // will create a cache with enterprise_id
+                token);
+        client.setEndpointUrlPrefix(config.getScimEndpointUrlPrefix());
+        return new AsyncSCIMClientImpl(token, client, methods, config);
+    }
+
+    public RequestStats scimStats(String enterpriseId) {
+        return scimStats(SCIMConfig.DEFAULT_SINGLETON_EXECUTOR_NAME, enterpriseId);
+    }
+
+    public RequestStats scimStats(String executorName, String enterpriseId) {
+        return config.getSCIMConfig().getMetricsDatastore().getStats(executorName, enterpriseId);
     }
 
     /**

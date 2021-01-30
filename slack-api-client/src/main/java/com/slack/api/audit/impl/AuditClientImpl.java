@@ -18,7 +18,6 @@ import okhttp3.Response;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 public class AuditClientImpl implements AuditClient {
 

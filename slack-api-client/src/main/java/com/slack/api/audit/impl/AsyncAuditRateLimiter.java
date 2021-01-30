@@ -9,6 +9,8 @@ import com.slack.api.rate_limits.metrics.LastMinuteRequests;
 import com.slack.api.rate_limits.metrics.MetricsDatastore;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Optional;
+
 import static com.slack.api.methods.MethodsRateLimitTier.getAllowedRequestsPerMinute;
 
 @Slf4j
@@ -34,6 +36,13 @@ public class AsyncAuditRateLimiter implements RateLimiter {
 
         public AuditWaitTimeCalculator(AuditConfig config) {
             this.config = config;
+        }
+
+        @Override
+        public Optional<Long> getRateLimitedMethodRetryEpochMillis(String executorName, String teamId, String key) {
+            return Optional.ofNullable(config.getMetricsDatastore().getRateLimitedMethodRetryEpochMillis(
+                    executorName, teamId, key
+            ));
         }
 
         @Override

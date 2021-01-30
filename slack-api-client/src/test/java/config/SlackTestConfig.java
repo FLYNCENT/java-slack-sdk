@@ -24,6 +24,7 @@ public class SlackTestConfig {
     public MetricsDatastore getMethodsMetricsDatastore() {
         return getConfig().getMethodsConfig().getMetricsDatastore();
     }
+
     public MetricsDatastore getAuditMetricsDatastore() {
         return getConfig().getAuditConfig().getMetricsDatastore();
     }
@@ -35,6 +36,13 @@ public class SlackTestConfig {
             public void accept(State state) {
                 String json = GsonFactory.createSnakeCase(CONFIG).toJson(getMethodsMetricsDatastore().getAllStats());
                 log.debug("--- (API Methods Stats) ---\n" + json);
+            }
+        });
+        CONFIG.getHttpClientResponseHandlers().add(new HttpResponseListener() {
+            @Override
+            public void accept(State state) {
+                String json = GsonFactory.createSnakeCase(CONFIG).toJson(getAuditMetricsDatastore().getAllStats());
+                log.debug("--- (Audit Logs Stats) ---\n" + json);
             }
         });
         CONFIG.getHttpClientResponseHandlers().add(new HttpResponseListener() {

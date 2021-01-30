@@ -8,6 +8,8 @@ import com.slack.api.rate_limits.WaitTimeCalculator;
 import com.slack.api.rate_limits.metrics.MetricsDatastore;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Optional;
+
 @Slf4j
 public class AsyncMethodsRateLimiter implements RateLimiter {
 
@@ -45,6 +47,13 @@ public class AsyncMethodsRateLimiter implements RateLimiter {
 
         public MethodsWaitTimeCalculator(MethodsConfig config) {
             this.config = config;
+        }
+
+        @Override
+        public Optional<Long> getRateLimitedMethodRetryEpochMillis(String executorName, String teamId, String key) {
+            return Optional.ofNullable(config.getMetricsDatastore().getRateLimitedMethodRetryEpochMillis(
+                    executorName, teamId, key
+            ));
         }
 
         @Override
