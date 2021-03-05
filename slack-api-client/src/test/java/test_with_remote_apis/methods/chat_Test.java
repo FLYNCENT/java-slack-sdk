@@ -1,6 +1,7 @@
 package test_with_remote_apis.methods;
 
 import com.slack.api.Slack;
+import com.slack.api.methods.MethodsClient;
 import com.slack.api.methods.SlackApiException;
 import com.slack.api.methods.request.chat.ChatPostMessageRequest;
 import com.slack.api.methods.request.chat.ChatUnfurlRequest;
@@ -813,6 +814,39 @@ public class chat_Test {
                 .blocksAsString(blocksAsString)
                 .build());
         assertThat(updateMessage.getError(), is(nullValue()));
+    }
+
+    @Test
+    public void issue704() throws Exception {
+        loadRandomChannelId();
+        MethodsClient client = slack.methods(botToken);
+        String channel = randomChannelId;
+        {
+            String text = "1234567890";
+            ChatPostMessageResponse response = client.chatPostMessage(r -> r.channel(channel).text(text));
+            client.chatDelete(r -> r.channel(channel).ts(response.getTs()));
+            assertThat(response.getMessage().getText(), is(text));
+        }
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < 404; i++) {
+                sb.append("1234567890");
+            }
+            String text = sb.toString();
+            ChatPostMessageResponse response = client.chatPostMessage(r -> r.channel(channel).text(text));
+            client.chatDelete(r -> r.channel(channel).ts(response.getTs()));
+            assertThat(response.getMessage().getText(), is(text));
+        }
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < 405; i++) {
+                sb.append("1234567890");
+            }
+            String text = sb.toString();
+            ChatPostMessageResponse response = client.chatPostMessage(r -> r.channel(channel).text(text));
+            client.chatDelete(r -> r.channel(channel).ts(response.getTs()));
+            assertThat(response.getMessage().getText(), is(text));
+        }
     }
 
 }
