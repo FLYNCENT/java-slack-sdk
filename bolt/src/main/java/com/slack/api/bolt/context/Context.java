@@ -73,19 +73,22 @@ public abstract class Context {
     protected final Map<String, String> additionalValues = new HashMap<>();
 
     public MethodsClient client() {
-        if (isEnterpriseInstall()) {
-            return getSlack().methods(botToken, teamId);
-        } else {
-            return getSlack().methods(botToken);
-        }
+        // There is no downside to have the team_id in MethodsClient instances.
+        // Thus, we always set the team_id from this incoming request.
+        //
+        // Org-wide installation / token rotation need team_id for the following reasons:
+        //   * org-wide: some of the API calls requires the parameter
+        //   * token rotation: TeamIdCache's auth.test API call with a bot token does not work
+        //  (refresh_token is required for auth.test when enabling token rotation)
+        return getSlack().methods(botToken, teamId);
     }
 
     public AsyncMethodsClient asyncClient() {
-        if (isEnterpriseInstall()) {
-            return getSlack().methodsAsync(botToken, teamId);
-        } else {
-            return getSlack().methodsAsync(botToken);
-        }
+        // Org-wide installation / token rotation need team_id for the following reasons:
+        //   * org-wide: some of the API calls requires the parameter
+        //   * token rotation: TeamIdCache's auth.test API call with a bot token does not work
+        //  (refresh_token is required for auth.test when enabling token rotation)
+        return getSlack().methodsAsync(botToken, teamId);
     }
 
     public ChatPostMessageResponse say(BuilderConfigurator<ChatPostMessageRequest.ChatPostMessageRequestBuilder> request) throws IOException, SlackApiException {

@@ -17,7 +17,8 @@ public class OpenIDConnectTokenResponse implements SlackApiTextResponse {
 
     private String accessToken;
     private String tokenType;
-    // TODO: parser
     private String idToken;
+    private String refreshToken; // only when enabling token rotation
+    private Integer expiresIn; // in seconds; only when enabling token rotation
 
 }

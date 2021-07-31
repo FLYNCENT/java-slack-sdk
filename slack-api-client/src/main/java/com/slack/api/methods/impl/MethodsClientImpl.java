@@ -2247,7 +2247,7 @@ public class MethodsClientImpl implements MethodsClient {
 
     @Override
     public OpenIDConnectUserInfoResponse openIDConnectUserInfo(OpenIDConnectUserInfoRequest req) throws IOException, SlackApiException {
-        return postFormAndParseResponse(toForm(req), Methods.OPENID_CONNECT_USER_INFO, OpenIDConnectUserInfoResponse.class);
+        return postFormWithTokenAndParseResponse(toForm(req), Methods.OPENID_CONNECT_USER_INFO, getToken(req), OpenIDConnectUserInfoResponse.class);
     }
 
     @Override
@@ -2911,8 +2911,8 @@ public class MethodsClientImpl implements MethodsClient {
             FormBody.Builder form,
             String methodName,
             String token) throws IOException {
-        String teamId = null;
-        if (statsEnabled) {
+        String teamId = this.teamId.orElse(null);
+        if (statsEnabled && teamId == null) {
             teamId = teamIdCache.lookupOrResolve(token);
         }
         try {
@@ -2936,8 +2936,8 @@ public class MethodsClientImpl implements MethodsClient {
             String methodName,
             String token,
             Class<T> clazz) throws IOException, SlackApiException {
-        String teamId = null;
-        if (statsEnabled) {
+        String teamId = this.teamId.orElse(null);
+        if (statsEnabled && teamId == null) {
             teamId = teamIdCache.lookupOrResolve(token);
         }
         try {
@@ -2978,8 +2978,8 @@ public class MethodsClientImpl implements MethodsClient {
             String methodName,
             String token,
             Class<T> clazz) throws IOException, SlackApiException {
-        String teamId = null;
-        if (statsEnabled) {
+        String teamId = this.teamId.orElse(null);
+        if (statsEnabled && teamId == null) {
             teamId = teamIdCache.lookupOrResolve(token);
         }
         try {
