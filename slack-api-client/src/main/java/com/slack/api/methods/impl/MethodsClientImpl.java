@@ -72,6 +72,8 @@ import com.slack.api.methods.request.oauth.OAuthAccessRequest;
 import com.slack.api.methods.request.oauth.OAuthTokenRequest;
 import com.slack.api.methods.request.oauth.OAuthV2AccessRequest;
 import com.slack.api.methods.request.oauth.OAuthV2ExchangeRequest;
+import com.slack.api.methods.request.openid.connect.OpenIDConnectTokenRequest;
+import com.slack.api.methods.request.openid.connect.OpenIDConnectUserInfoRequest;
 import com.slack.api.methods.request.pins.PinsAddRequest;
 import com.slack.api.methods.request.pins.PinsListRequest;
 import com.slack.api.methods.request.pins.PinsRemoveRequest;
@@ -175,6 +177,8 @@ import com.slack.api.methods.response.oauth.OAuthAccessResponse;
 import com.slack.api.methods.response.oauth.OAuthTokenResponse;
 import com.slack.api.methods.response.oauth.OAuthV2AccessResponse;
 import com.slack.api.methods.response.oauth.OAuthV2ExchangeResponse;
+import com.slack.api.methods.response.openid.connect.OpenIDConnectTokenResponse;
+import com.slack.api.methods.response.openid.connect.OpenIDConnectUserInfoResponse;
 import com.slack.api.methods.response.pins.PinsAddResponse;
 import com.slack.api.methods.response.pins.PinsListResponse;
 import com.slack.api.methods.response.pins.PinsRemoveResponse;
@@ -2215,6 +2219,40 @@ public class MethodsClientImpl implements MethodsClient {
     @Override
     public OAuthTokenResponse oauthToken(RequestConfigurator<OAuthTokenRequest.OAuthTokenRequestBuilder> req) throws IOException, SlackApiException {
         return oauthToken(req.configure(OAuthTokenRequest.builder()).build());
+    }
+
+    @Override
+    public OpenIDConnectTokenResponse openIDConnectToken(OpenIDConnectTokenRequest req) throws IOException, SlackApiException {
+        FormBody.Builder form = new FormBody.Builder();
+        if (req.getCode() != null) {
+            form.add("code", req.getCode());
+        }
+        if (req.getRedirectUri() != null) {
+            form.add("redirect_uri", req.getRedirectUri());
+        }
+        if (req.getGrantType() != null) {
+            form.add("grant_type", req.getGrantType());
+        }
+        if (req.getRefreshToken() != null) {
+            form.add("refresh_token", req.getRefreshToken());
+        }
+        String authorizationHeader = Credentials.basic(req.getClientId(), req.getClientSecret());
+        return postFormWithAuthorizationHeaderAndParseResponse(form, endpointUrlPrefix + Methods.OPENID_CONNECT_TOKEN, authorizationHeader, OpenIDConnectTokenResponse.class);
+    }
+
+    @Override
+    public OpenIDConnectTokenResponse openIDConnectToken(RequestConfigurator<OpenIDConnectTokenRequest.OpenIDConnectTokenRequestBuilder> req) throws IOException, SlackApiException {
+        return openIDConnectToken(req.configure(OpenIDConnectTokenRequest.builder()).build());
+    }
+
+    @Override
+    public OpenIDConnectUserInfoResponse openIDConnectUserInfo(OpenIDConnectUserInfoRequest req) throws IOException, SlackApiException {
+        return postFormAndParseResponse(toForm(req), Methods.OPENID_CONNECT_USER_INFO, OpenIDConnectUserInfoResponse.class);
+    }
+
+    @Override
+    public OpenIDConnectUserInfoResponse openIDConnectUserInfo(RequestConfigurator<OpenIDConnectUserInfoRequest.OpenIDConnectUserInfoRequestBuilder> req) throws IOException, SlackApiException {
+        return openIDConnectUserInfo(req.configure(OpenIDConnectUserInfoRequest.builder()).build());
     }
 
     @Override
