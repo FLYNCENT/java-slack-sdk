@@ -15,6 +15,7 @@ import com.slack.api.util.json.GsonFactory;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Response;
+import org.jetbrains.annotations.NotNull;
 import util.ObjectInitializer;
 
 import java.io.File;
@@ -101,86 +102,92 @@ public class JsonDataRecorder {
         // Update the existing raw data
         Path rawFilePath = new File(toRawFilePath(path)).toPath();
         Files.createDirectories(rawFilePath.getParent());
-        Files.write(rawFilePath, gson().toJson(existingRawJsonElem).getBytes(UTF_8));
+        if (rawJsonObj != null) {
+            Files.write(rawFilePath, gson().toJson(rawJsonObj).getBytes(UTF_8));
+        } else {
+            Files.write(rawFilePath, gson().toJson(existingRawJsonElem).getBytes(UTF_8));
+        }
 
-        if (existingRawJsonElem != null
-                && existingRawJsonElem.isJsonObject()
-                && rawJsonObj != null) {
-            // Normalize the property values in the JSON data
-            for (Map.Entry<String, JsonElement> entry : rawJsonObj.entrySet()) {
-                scanToNormalizeValues(path, rawJsonObj, entry.getKey(), entry.getValue());
-            }
-            // Merge the raw data into the existing masked (sample) data
-            String existingSampleJson = null;
-            try {
-                Path jsonFilePath = new File(toMaskedFilePath(path)).toPath();
-                existingSampleJson = Files.readAllLines(jsonFilePath, UTF_8).stream().collect(Collectors.joining());
-            } catch (NoSuchFileException e) {
-            }
-            if (existingSampleJson == null) {
-                existingSampleJson = "{}";
-            }
-            JsonObject mergedJsonObj = rawJsonObj;
-            if (existingSampleJson.trim().isEmpty()) {
+        if (existingRawJsonElem != null) {
+            if (existingRawJsonElem.isJsonObject() && rawJsonObj != null) {
+                // Normalize the property values in the JSON data
+                for (Map.Entry<String, JsonElement> entry : rawJsonObj.entrySet()) {
+                    scanToNormalizeValues(path, rawJsonObj, entry.getKey(), entry.getValue());
+                }
+                // Merge the raw data into the existing masked (sample) data
+                String existingSampleJson = buildSampleJSONString(path);
                 JsonElement existingSampleJsonElem = JsonParser.parseString(existingSampleJson);
-                JsonObject sampleJsonObj = existingSampleJsonElem.isJsonObject() ? existingSampleJsonElem.getAsJsonObject() : null;
-                if (sampleJsonObj != null && sampleJsonObj.isJsonObject()) {
-                    mergedJsonObj = sampleJsonObj;
-                    try {
-                        MergeJsonBuilder.mergeJsonObjects(mergedJsonObj, MergeJsonBuilder.ConflictStrategy.PREFER_FIRST_OBJ, rawJsonObj);
-                    } catch (MergeJsonBuilder.JsonConflictException e) {
-                        log.warn("Failed to merge JSON objects because {}", e.getMessage(), e);
-                    }
+                JsonObject mergedJsonObj = existingSampleJsonElem.isJsonObject() ?
+                        existingSampleJsonElem.getAsJsonObject() : new JsonObject();
+                try {
+                    MergeJsonBuilder.mergeJsonObjects(mergedJsonObj, MergeJsonBuilder.ConflictStrategy.PREFER_FIRST_OBJ, rawJsonObj);
+                } catch (MergeJsonBuilder.JsonConflictException e) {
+                    log.warn("Failed to merge JSON objects because {}", e.getMessage(), e);
                 }
-            }
-            // Normalize the merged data (especially for cleaning up array data in nested JSON data)
-            for (Map.Entry<String, JsonElement> entry : mergedJsonObj.entrySet()) {
-                scanToNormalizeValues(path, mergedJsonObj, entry.getKey(), entry.getValue());
-            }
+                // Normalize the merged data (especially for cleaning up array data in nested JSON data)
+                for (Map.Entry<String, JsonElement> entry : mergedJsonObj.entrySet()) {
+                    scanToNormalizeValues(path, mergedJsonObj, entry.getKey(), entry.getValue());
+                }
 
-            if (path.startsWith("/scim")) {
-                // Manually build complete objects for SCIM API response
-                if (mergedJsonObj.get("Resources") != null) {
-                    for (JsonElement resource : mergedJsonObj.get("Resources").getAsJsonArray()) {
-                        JsonObject resourceObj = resource.getAsJsonObject();
-                        if (resourceObj.get("userName") != null) {
-                            initializeSCIMUser(resourceObj);
-                        }
-                        if (resourceObj.get("members") != null) {
-                            initializeSCIMGroup(resourceObj);
-                        }
-                    }
+                if (path.startsWith("/scim")) {
+                    writeSCIMResponseData(path, mergedJsonObj);
                 } else {
-                    if (mergedJsonObj.get("userName") != null) {
-                        initializeSCIMUser(mergedJsonObj);
+                    if (!path.startsWith("/status")) {
+                        // ok, error etc. do not exist in the Status (Current) API response
+                        addCommonPropertiesAtTopLevel(mergedJsonObj);
                     }
-                    if (mergedJsonObj.get("members") != null) {
-                        initializeSCIMGroup(mergedJsonObj);
-                    }
+                    // Write the masked (sample) JSON data
+                    Path filePath = new File(toMaskedFilePath(path)).toPath();
+                    Files.createDirectories(filePath.getParent());
+                    Files.write(filePath, gson().toJson(mergedJsonObj).getBytes(UTF_8));
                 }
-                Path filePath = new File(toMaskedFilePath(path).replaceFirst("/\\w{9}.json$", "/000000000.json")).toPath();
-                Files.createDirectories(filePath.getParent());
-                Files.write(filePath, gson().toJson(mergedJsonObj).getBytes(UTF_8));
-
-            } else {
-                if (!path.startsWith("/status")) {
-                    // ok, error etc. do not exist in the Status (Current) API response
-                    addCommonPropertiesAtTopLevel(mergedJsonObj);
-                }
-
-                // Write the masked (sample) JSON data
+            } else if (existingRawJsonElem.isJsonArray()) {
+                // The Status History API
+                JsonArray jsonArray = existingRawJsonElem.getAsJsonArray();
+                scanToNormalizeValues(path, null, null, jsonArray);
                 Path filePath = new File(toMaskedFilePath(path)).toPath();
                 Files.createDirectories(filePath.getParent());
-                Files.write(filePath, gson().toJson(mergedJsonObj).getBytes(UTF_8));
+                Files.write(filePath, gson().toJson(jsonArray).getBytes(UTF_8));
             }
-        } else if (existingRawJsonElem.isJsonArray()) {
-            // The Status History API
-            JsonArray jsonArray = existingRawJsonElem.getAsJsonArray();
-            scanToNormalizeValues(path, null, null, jsonArray);
-            Path filePath = new File(toMaskedFilePath(path)).toPath();
-            Files.createDirectories(filePath.getParent());
-            Files.write(filePath, gson().toJson(jsonArray).getBytes(UTF_8));
         }
+    }
+
+    private String buildSampleJSONString(String path) throws IOException {
+        String existingSampleJson = null;
+        try {
+            Path jsonFilePath = new File(toMaskedFilePath(path)).toPath();
+            existingSampleJson = Files.readAllLines(jsonFilePath, UTF_8).stream().collect(Collectors.joining());
+        } catch (NoSuchFileException e) {
+        }
+        if (existingSampleJson == null) {
+            existingSampleJson = "{}";
+        }
+        return existingSampleJson;
+    }
+
+    private void writeSCIMResponseData(String path, JsonObject mergedJsonObj) throws IOException {
+        // Manually build complete objects for SCIM API response
+        if (mergedJsonObj.get("Resources") != null) {
+            for (JsonElement resource : mergedJsonObj.get("Resources").getAsJsonArray()) {
+                JsonObject resourceObj = resource.getAsJsonObject();
+                if (resourceObj.get("userName") != null) {
+                    initializeSCIMUser(resourceObj);
+                }
+                if (resourceObj.get("members") != null) {
+                    initializeSCIMGroup(resourceObj);
+                }
+            }
+        } else {
+            if (mergedJsonObj.get("userName") != null) {
+                initializeSCIMUser(mergedJsonObj);
+            }
+            if (mergedJsonObj.get("members") != null) {
+                initializeSCIMGroup(mergedJsonObj);
+            }
+        }
+        Path filePath = new File(toMaskedFilePath(path).replaceFirst("/\\w{9}.json$", "/000000000.json")).toPath();
+        Files.createDirectories(filePath.getParent());
+        Files.write(filePath, gson().toJson(mergedJsonObj).getBytes(UTF_8));
     }
 
     private void initializeSCIMGroup(JsonObject resourceObj) {

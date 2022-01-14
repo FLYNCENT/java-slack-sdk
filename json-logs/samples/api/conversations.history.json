@@ -189,33 +189,17 @@
       "blocks": [
         {
           "type": "",
-          "block_id": "",
-          "text": {
-            "type": "",
-            "text": "",
-            "verbatim": false,
-            "emoji": false
-          },
-          "accessory": {
-            "fallback": "",
-            "image_url": "https://www.example.com/",
-            "image_width": 12345,
-            "image_height": 12345,
-            "image_bytes": 12345,
-            "type": "",
-            "alt_text": ""
-          },
           "elements": [
             {
               "type": "",
-              "action_id": "",
               "text": {
                 "type": "",
                 "text": "",
                 "emoji": false
               },
-              "value": "",
+              "action_id": "",
               "url": "",
+              "value": "",
               "style": "",
               "confirm": {
                 "title": {
@@ -289,6 +273,7 @@
               "image_bytes": 12345
             }
           ],
+          "block_id": "",
           "fallback": "",
           "image_url": "",
           "image_width": 12345,
@@ -300,6 +285,11 @@
             "text": "",
             "emoji": false
           },
+          "text": {
+            "type": "",
+            "text": "",
+            "emoji": false
+          },
           "fields": [
             {
               "type": "",
@@ -307,7 +297,16 @@
               "emoji": false,
               "verbatim": false
             }
-          ]
+          ],
+          "accessory": {
+            "type": "",
+            "image_url": "",
+            "alt_text": "",
+            "fallback": "",
+            "image_width": 12345,
+            "image_height": 12345,
+            "image_bytes": 12345
+          }
         }
       ],
       "attachments": [

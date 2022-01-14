@@ -4,10 +4,7 @@ import com.google.gson.JsonElement;
 import com.slack.api.model.*;
 import com.slack.api.model.block.*;
 import com.slack.api.model.block.composition.*;
-import com.slack.api.model.block.element.BlockElement;
-import com.slack.api.model.block.element.ImageElement;
-import com.slack.api.model.block.element.PlainTextInputElement;
-import com.slack.api.model.block.element.RadioButtonsElement;
+import com.slack.api.model.block.element.*;
 import com.slack.api.util.json.GsonFactory;
 
 import java.util.Arrays;
@@ -45,9 +42,37 @@ public class SampleObjects {
                 GsonFactory.createSnakeCase().toJsonTree(initProperties(
                         SectionBlock.builder()
                                 .accessory(initProperties(ImageElement.builder().build()))
-                                .text(TextObject)
-                                .fields(SectionBlockFieldElements)
-                                .build()))
+                                .text(TextObject).fields(SectionBlockFieldElements).build())),
+                GsonFactory.createSnakeCase().toJsonTree(initProperties(
+                        SectionBlock.builder()
+                                .accessory(initProperties(TimePickerElement.builder()
+                                        .placeholder(initProperties(PlainTextObject.builder().build()))
+                                        .confirm(Confirm)
+                                        .build()))
+                                .text(TextObject).fields(SectionBlockFieldElements).build())),
+                // TODO: channels / conversations etc.
+                GsonFactory.createSnakeCase().toJsonTree(initProperties(
+                        SectionBlock.builder()
+                                .accessory(initProperties(usersSelect(s -> s.confirm(Confirm))))
+                                .text(TextObject).fields(SectionBlockFieldElements).build())),
+                GsonFactory.createSnakeCase().toJsonTree(initProperties(
+                        SectionBlock.builder()
+                                .accessory(initProperties(multiUsersSelect(s -> s.confirm(Confirm))))
+                                .text(TextObject).fields(SectionBlockFieldElements).build())),
+                GsonFactory.createSnakeCase().toJsonTree(initProperties(
+                        SectionBlock.builder()
+                                .accessory(initProperties(staticSelect(s -> s
+                                        .initialOption(Option)
+                                        // TODO: options / optionGroups
+                                        .optionGroups(Arrays.asList(initProperties(OptionGroupObject.builder().build())))
+                                        .confirm(Confirm))))
+                                .text(TextObject).fields(SectionBlockFieldElements).build())),
+                GsonFactory.createSnakeCase().toJsonTree(initProperties(
+                        SectionBlock.builder()
+                                .accessory(initProperties(multiStaticSelect(s -> s
+                                        // TODO: options / optionGroups
+                                        .initialOptions(Arrays.asList(Option)).confirm(Confirm))))
+                                .text(TextObject).fields(SectionBlockFieldElements).build()))
         );
     }
 

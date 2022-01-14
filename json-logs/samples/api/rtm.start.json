@@ -348,7 +348,10 @@
         "pt-BR": "",
         "ja-JP": "",
         "ko-KR": "",
-        "it-IT": ""
+        "it-IT": "",
+        "ru-RU": "",
+        "zh-CN": "",
+        "zh-TW": ""
       },
       "joiner_notifications_muted": false,
       "invite_accepted_notifications_muted": false,
@@ -399,7 +402,72 @@
       "seen_sc_menu_coachmark": false,
       "seen_sc_page": false,
       "notification_center_filters": "",
-      "media_playback_speed": 12345
+      "media_playback_speed": 12345,
+      "underline_links": false,
+      "composer_nux": "",
+      "seen_schedule_send_coachmark": false,
+      "reminder_notification_time": "",
+      "help_flexpane_slack_connect_card_seen": false,
+      "help_flexpane_clips_card_seen": false,
+      "should_show_connect_section": false,
+      "enable_streamline_view": false,
+      "enable_sent_view": false,
+      "calls_disconnect_on_lock": false,
+      "open_quip_doc_in_flexpane": false,
+      "saved_searches": "",
+      "huddles_cc_by_default": false,
+      "huddles_set_status": false,
+      "huddles_show_shouty_rooster": false,
+      "huddles_disconnect_on_lock": false,
+      "huddles_play_music_when_last": false,
+      "huddles_allow_smart_notif": false,
+      "huddles_reactions_play_sound": false,
+      "huddles_reactions_read_out_loud": false,
+      "dismissed_fullscreen_download_ssb_prompt": false,
+      "dismissed_banner_download_ssb_prompt": false,
+      "huddle_invite_sound": "",
+      "enable_app_config_redesign": false,
+      "dismissed_app_config_redesign_coachmark": false,
+      "dismissed_app_manifest_description": false,
+      "deprecation_banner_last_seen": 12345,
+      "desktop_client_ids": "",
+      "a11y_play_sound_for_incoming_dm": false,
+      "a11y_play_sound_for_sent_dm": false,
+      "a11y_read_out_incoming_dm": false,
+      "a11y_screen_reader_message_label_date_time_first": false,
+      "should_show_unsend_message_confirmation": false,
+      "user_customized_quick_reactions_use_frequently_used_emoji": false,
+      "reaction_notifications": "",
+      "enable_reminders_view": false,
+      "enable_hq_view": false,
+      "enable_slack_connect_view_2": 12345,
+      "media_muted": false,
+      "media_volume": 12345,
+      "dismissed_scdm_education": false,
+      "seen_bookmarks_intro": false,
+      "scdm_trial_offer_banner": "",
+      "identity_links_prefs": "",
+      "identity_links_global_prefs": "",
+      "seen_sections_unreads_only_prompt_count": 12345,
+      "last_seen_sections_unreads_only_prompt_timestamp": 12345,
+      "notifications_view": "",
+      "progressive_disclosure_state": "",
+      "suggestions_request_id": "",
+      "allowed_unfurl_senders": "",
+      "ia_details_coachmark_seen": false,
+      "hide_external_members_sharing_speed_bump": false,
+      "who_can_share_contact_card": "",
+      "slack_connect_invite_should_badge_sidebar": false,
+      "phc_dismissed": "",
+      "huddles_chime_new_endpoints_check_completed": 12345,
+      "dismissed_app_manifest_coachmark": false,
+      "should_show_contextual_help_for_conversation_navigation": false,
+      "should_show_contextual_help_for_jump_to_conversation": false,
+      "should_show_contextual_help_for_section_navigation": false,
+      "should_show_contextual_help_for_thread_navigation": false,
+      "dismissed_gov_slack_first_time_popup": false,
+      "mobile_channel_list_sort": "",
+      "user_expectations_survey_last_trigger_attempt": 12345
     },
     "created": 12345,
     "first_login": 12345,
@@ -669,7 +737,78 @@
         ]
       },
       "show_legacy_paid_benefits_page": false,
-      "enable_domain_allowlist_for_cea": false
+      "enable_domain_allowlist_for_cea": false,
+      "invited_user_preset": {
+        "enable_invited_user": false
+      },
+      "display_pronouns": false,
+      "allow_audio_clip_sharing_slack_connect": false,
+      "allow_audio_clips": false,
+      "allow_box_cfs": false,
+      "allow_huddles": false,
+      "allow_huddles_transcriptions": false,
+      "allow_media_transcriptions": false,
+      "allow_sponsored_slack_connections": false,
+      "allow_video_clip_sharing_slack_connect": false,
+      "allow_video_clips": false,
+      "app_dir_only": false,
+      "can_accept_slack_connect_channel_invites": false,
+      "can_create_external_limited_invite": false,
+      "can_create_slack_connect_channel_invite": false,
+      "content_review_enabled": false,
+      "display_default_phone": false,
+      "enterprise_intune_enabled": false,
+      "enterprise_mdm_date_enabled": 12345,
+      "enterprise_mdm_level": 12345,
+      "enterprise_team_creation_request": {
+        "is_enabled": false
+      },
+      "hermes_has_accepted_tos": false,
+      "hide_gsuite_invite_option": false,
+      "ml_opt_out": false,
+      "notify_pending_enabled": false,
+      "private_channel_membership_limit": 12345,
+      "search_feedback_opt_out": false,
+      "session_duration": 12345,
+      "session_duration_type": 12345,
+      "sign_in_with_slack_disabled": false,
+      "slack_connect_approval_type": "",
+      "sso_disable_emails": false,
+      "sso_optional": false,
+      "sso_signup_restrictions": 12345,
+      "sso_sync_with_provider": false,
+      "who_can_accept_slack_connect_channel_invites": {
+        "type": [
+          ""
+        ]
+      },
+      "who_can_create_external_limited_invite": {
+        "type": [
+          ""
+        ]
+      },
+      "who_can_create_slack_connect_channel_invite": {
+        "type": [
+          ""
+        ]
+      },
+      "who_can_review_flagged_content": {
+        "type": [
+          ""
+        ]
+      },
+      "who_can_use_hermes": {
+        "type": [
+          ""
+        ]
+      },
+      "identity_links_prefs": {
+        "is_enabled": false
+      },
+      "magic_unfurls_enabled": false,
+      "allow_clip_downloads": "",
+      "display_name_pronunciation": false,
+      "hermes_triggers_trippable_by_slack_connected_teams": false
     },
     "icon": {
       "image_34": "https://www.example.com/",
@@ -688,7 +827,8 @@
     "date_create": 12345,
     "limit_ts": 12345,
     "avatar_base_url": "https://www.example.com/",
-    "is_verified": false
+    "is_verified": false,
+    "url": "https://www.example.com/"
   },
   "accept_tos_url": "https://www.example.com/",
   "latest_event_ts": "0000000000.000000",
@@ -746,7 +886,10 @@
         ""
       ],
       "is_pending_ext_shared": false,
-      "conversation_host_id": "T00000000"
+      "conversation_host_id": "T00000000",
+      "connected_limited_team_ids": [
+        ""
+      ]
     }
   ],
   "groups": [
@@ -755,7 +898,7 @@
       "name": "",
       "name_normalized": "",
       "is_group": false,
-      "created": 123,
+      "created": 12345,
       "creator": "",
       "is_archived": false,
       "is_mpim": false,
@@ -766,12 +909,12 @@
       "topic": {
         "value": "",
         "creator": "",
-        "last_set": 123
+        "last_set": 12345
       },
       "purpose": {
         "value": "",
         "creator": "",
-        "last_set": 123
+        "last_set": 12345
       },
       "last_read": "",
       "latest": {
@@ -806,7 +949,7 @@
             "id": "",
             "deleted": false,
             "name": "",
-            "updated": 123,
+            "updated": 12345,
             "app_id": "",
             "icons": {
               "image_36": "",
@@ -819,12 +962,12 @@
             "user": "",
             "ts": ""
           },
-          "reply_count": 123,
-          "reply_users_count": 123,
+          "reply_count": 12345,
+          "reply_users_count": 12345,
           "latest_reply": "",
           "subscribed": false,
           "last_read": "",
-          "unread_count": 123,
+          "unread_count": 12345,
           "ts": ""
         },
         "upload": false,
@@ -835,7 +978,7 @@
           "id": "",
           "deleted": false,
           "name": "",
-          "updated": 123,
+          "updated": 12345,
           "app_id": "",
           "icons": {
             "image_36": "",
@@ -858,9 +1001,9 @@
           "ts": ""
         }
       },
-      "unread_count": 123,
-      "unread_count_display": 123,
-      "priority": 12.3
+      "unread_count": 12345,
+      "unread_count_display": 12345,
+      "priority": 12345
     }
   ],
   "ims": [
@@ -912,8 +1055,7 @@
         "updated_by": "U00000000",
         "prefs": {
           "channels": [
-            "",
-            "C00000000"
+            ""
           ],
           "groups": [
             {
@@ -921,7 +1063,7 @@
               "name": "",
               "name_normalized": "",
               "is_group": false,
-              "created": 123,
+              "created": 12345,
               "creator": "",
               "is_archived": false,
               "is_mpim": false,
@@ -932,12 +1074,12 @@
               "topic": {
                 "value": "",
                 "creator": "",
-                "last_set": 123
+                "last_set": 12345
               },
               "purpose": {
                 "value": "",
                 "creator": "",
-                "last_set": 123
+                "last_set": 12345
               },
               "last_read": "",
               "latest": {
@@ -972,7 +1114,7 @@
                     "id": "",
                     "deleted": false,
                     "name": "",
-                    "updated": 123,
+                    "updated": 12345,
                     "app_id": "",
                     "icons": {
                       "image_36": "",
@@ -985,12 +1127,12 @@
                     "user": "",
                     "ts": ""
                   },
-                  "reply_count": 123,
-                  "reply_users_count": 123,
+                  "reply_count": 12345,
+                  "reply_users_count": 12345,
                   "latest_reply": "",
                   "subscribed": false,
                   "last_read": "",
-                  "unread_count": 123,
+                  "unread_count": 12345,
                   "ts": ""
                 },
                 "upload": false,
@@ -1001,7 +1143,7 @@
                   "id": "",
                   "deleted": false,
                   "name": "",
-                  "updated": 123,
+                  "updated": 12345,
                   "app_id": "",
                   "icons": {
                     "image_36": "",
@@ -1024,9 +1166,9 @@
                   "ts": ""
                 }
               },
-              "unread_count": 123,
-              "unread_count_display": 123,
-              "priority": 12.3
+              "unread_count": 12345,
+              "unread_count_display": 12345,
+              "priority": 12345
             }
           ]
         },
@@ -1068,6 +1210,10 @@
           "X00000001": {
             "value": "",
             "alt": ""
+          },
+          "Xf019LT13Z16": {
+            "value": "",
+            "alt": ""
           }
         },
         "status_text": "",
@@ -1091,7 +1237,15 @@
         "api_app_id": "",
         "bot_id": "B00000000",
         "always_active": false,
-        "guest_invited_by": "U00000000"
+        "guest_invited_by": "U00000000",
+        "status_emoji_display_info": [
+          {
+            "emoji_name": "",
+            "display_alias": "",
+            "display_url": ""
+          }
+        ],
+        "pronouns": ""
       },
       "is_admin": false,
       "is_owner": false,
@@ -1102,7 +1256,9 @@
       "is_app_user": false,
       "updated": 12345,
       "presence": "",
-      "is_workflow_bot": false
+      "is_workflow_bot": false,
+      "is_email_confirmed": false,
+      "who_can_share_contact_card": ""
     }
   ],
   "cache_version": "",
@@ -1126,5 +1282,13 @@
   "is_europe": false,
   "error": "",
   "needed": "",
-  "provided": ""
+  "provided": "",
+  "links": {
+    "domains_ts": 12345
+  },
+  "response_metadata": {
+    "messages": [
+      ""
+    ]
+  }
 }

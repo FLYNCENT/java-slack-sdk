@@ -62,20 +62,13 @@
           "emoji": false
         },
         "accessory": {
-          "fallback": "",
+          "type": "",
           "image_url": "https://www.example.com/",
+          "alt_text": "",
+          "fallback": "",
           "image_width": 12345,
           "image_height": 12345,
-          "image_bytes": 12345,
-          "type": "",
-          "alt_text": "",
-          "action_id": "",
-          "initial_time": "",
-          "placeholder": {
-            "type": "",
-            "text": "",
-            "emoji": false
-          }
+          "image_bytes": 12345
         },
         "elements": [
           {
@@ -86,17 +79,72 @@
               "text": "",
               "emoji": false
             },
-            "value": ""
-          },
-          {
-            "type": "",
-            "text": "",
-            "verbatim": false
-          },
-          {
-            "type": "",
-            "text": "",
-            "emoji": false
+            "value": "",
+            "emoji": false,
+            "verbatim": false,
+            "url": "",
+            "style": "",
+            "confirm": {
+              "title": {
+                "type": "",
+                "text": "",
+                "emoji": false
+              },
+              "text": {
+                "type": "",
+                "text": "",
+                "emoji": false
+              },
+              "confirm": {
+                "type": "",
+                "text": "",
+                "emoji": false
+              },
+              "deny": {
+                "type": "",
+                "text": "",
+                "emoji": false
+              },
+              "style": ""
+            },
+            "placeholder": {
+              "type": "",
+              "text": "",
+              "emoji": false
+            },
+            "initial_channel": "",
+            "response_url_enabled": false,
+            "focus_on_load": false,
+            "initial_conversation": "",
+            "default_to_current_conversation": false,
+            "filter": {
+              "exclude_external_shared_channels": false,
+              "exclude_bot_users": false
+            },
+            "initial_date": "",
+            "initial_time": "",
+            "initial_option": {
+              "text": {
+                "type": "",
+                "text": "",
+                "emoji": false
+              },
+              "value": "",
+              "description": {
+                "type": "",
+                "text": "",
+                "emoji": false
+              },
+              "url": ""
+            },
+            "min_query_length": 12345,
+            "image_url": "",
+            "alt_text": "",
+            "fallback": "",
+            "image_width": 12345,
+            "image_height": 12345,
+            "image_bytes": 12345,
+            "initial_user": ""
           },
           {
             "type": "",
@@ -139,6 +187,7 @@
             },
             "initial_channel": "",
             "response_url_enabled": false,
+            "focus_on_load": false,
             "initial_conversation": "",
             "default_to_current_conversation": false,
             "filter": {
@@ -146,6 +195,7 @@
               "exclude_bot_users": false
             },
             "initial_date": "",
+            "initial_time": "",
             "initial_option": {
               "text": {
                 "type": "",
@@ -195,24 +245,23 @@
               "image_128": "https://www.example.com/",
               "image_192": "https://www.example.com/",
               "image_512": "https://www.example.com/",
-              "image_1024": "https://www.example.com/",
-              "image_original": "https://www.example.com/"
+              "image_1024": "https://www.example.com/"
             },
             "date_start": 12345,
             "active_participants": [
               {
-                "slack_id": "U00000000",
                 "external_id": "",
                 "avatar_url": "https://www.example.com/",
-                "display_name": ""
+                "display_name": "",
+                "slack_id": "U00000000"
               }
             ],
             "all_participants": [
               {
-                "slack_id": "U00000000",
                 "external_id": "",
                 "avatar_url": "https://www.example.com/",
-                "display_name": ""
+                "display_name": "",
+                "slack_id": "U00000000"
               }
             ],
             "display_id": "",
@@ -255,7 +304,9 @@
     ],
     "attachments": [
       {
+        "callback_id": "",
         "text": "",
+        "footer": "",
         "id": 12345,
         "fallback": "",
         "blocks": [
@@ -303,6 +354,7 @@
                 },
                 "initial_channel": "",
                 "response_url_enabled": false,
+                "focus_on_load": false,
                 "initial_conversation": "",
                 "default_to_current_conversation": false,
                 "filter": {
@@ -310,6 +362,7 @@
                   "exclude_bot_users": false
                 },
                 "initial_date": "",
+                "initial_time": "",
                 "initial_option": {
                   "text": {
                     "type": "",
@@ -381,7 +434,6 @@
         ],
         "color": "",
         "msg_subtype": "",
-        "callback_id": "",
         "pretext": "",
         "service_url": "",
         "service_name": "",
@@ -418,10 +470,10 @@
         "thumb_url": "",
         "thumb_width": 12345,
         "thumb_height": 12345,
+        "video_url": "",
         "video_html": "",
         "video_html_width": 12345,
         "video_html_height": 12345,
-        "footer": "",
         "footer_icon": "",
         "ts": "",
         "mrkdwn_in": [
@@ -491,5 +543,8 @@
     ]
   },
   "needed": "",
-  "provided": ""
+  "provided": "",
+  "errors": [
+    ""
+  ]
 }
