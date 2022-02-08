@@ -43,6 +43,10 @@ import com.slack.api.methods.request.apps.permissions.users.AppsPermissionsUsers
 import com.slack.api.methods.request.auth.AuthRevokeRequest;
 import com.slack.api.methods.request.auth.AuthTestRequest;
 import com.slack.api.methods.request.auth.teams.AuthTeamsListRequest;
+import com.slack.api.methods.request.bookmarks.BookmarksAddRequest;
+import com.slack.api.methods.request.bookmarks.BookmarksEditRequest;
+import com.slack.api.methods.request.bookmarks.BookmarksListRequest;
+import com.slack.api.methods.request.bookmarks.BookmarksRemoveRequest;
 import com.slack.api.methods.request.bots.BotsInfoRequest;
 import com.slack.api.methods.request.calls.CallsAddRequest;
 import com.slack.api.methods.request.calls.CallsEndRequest;
@@ -101,7 +105,6 @@ import com.slack.api.methods.request.views.ViewsUpdateRequest;
 import com.slack.api.methods.request.workflows.WorkflowsStepCompletedRequest;
 import com.slack.api.methods.request.workflows.WorkflowsStepFailedRequest;
 import com.slack.api.methods.request.workflows.WorkflowsUpdateStepRequest;
-import com.slack.api.methods.response.openid.connect.OpenIDConnectUserInfoResponse;
 import com.slack.api.model.Attachment;
 import com.slack.api.model.ConversationType;
 import com.slack.api.util.json.GsonFactory;
@@ -854,6 +857,39 @@ public class RequestFormBuilder {
         setIfNotNull("include_icon", req.getIncludeIcon(), form);
         return form;
     }
+
+    public static FormBody.Builder toForm(BookmarksAddRequest req) {
+        FormBody.Builder form = new FormBody.Builder();
+        setIfNotNull("channel_id", req.getChannelId(), form);
+        setIfNotNull("title", req.getTitle(), form);
+        setIfNotNull("type", req.getType(), form);
+        setIfNotNull("emoji", req.getEmoji(), form);
+        setIfNotNull("entity_id", req.getEntityId(), form);
+        setIfNotNull("link", req.getLink(), form);
+        setIfNotNull("parent_id", req.getParentId(), form);
+        return form;
+    }
+
+    public static FormBody.Builder toForm(BookmarksEditRequest req) {
+        FormBody.Builder form = new FormBody.Builder();
+        setIfNotNull("bookmark_id", req.getBookmarkId(), form);
+        setIfNotNull("channel_id", req.getChannelId(), form);
+        setIfNotNull("emoji", req.getEmoji(), form);
+        setIfNotNull("link", req.getLink(), form);
+        setIfNotNull("title", req.getTitle(), form);
+        return form;
+    }
+
+    public static FormBody.Builder toForm(BookmarksListRequest req) {
+        FormBody.Builder form = new FormBody.Builder();
+        return form;
+    }
+
+    public static FormBody.Builder toForm(BookmarksRemoveRequest req) {
+        FormBody.Builder form = new FormBody.Builder();
+        return form;
+    }
+
 
     public static FormBody.Builder toForm(BotsInfoRequest req) {
         FormBody.Builder form = new FormBody.Builder();
