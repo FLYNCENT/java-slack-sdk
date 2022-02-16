@@ -18,23 +18,83 @@ import static java.util.stream.Collectors.toList;
 
 public abstract class BaseRedisMetricsDatastore<SUPPLIER, MSG extends QueueMessage> implements MetricsDatastore, AutoCloseable {
 
+    public static long DEFAULT_CLEANER_EXECUTION_INTERVAL_MILLISECONDS = 100L;
+
     private final String appName;
     private final JedisPool jedisPool;
     private ExecutorServiceProvider executorServiceProvider;
     private ScheduledExecutorService cleanerExecutor;
+    private boolean cleanerEnabled;
+    private long cleanerExecutionIntervalMilliseconds;
 
     public BaseRedisMetricsDatastore(String appName, JedisPool jedisPool) {
-        this(appName, jedisPool, DaemonThreadExecutorServiceProvider.getInstance());
+        this(
+                appName,
+                jedisPool,
+                DaemonThreadExecutorServiceProvider.getInstance(),
+                true,
+                DEFAULT_CLEANER_EXECUTION_INTERVAL_MILLISECONDS
+        );
     }
 
     public BaseRedisMetricsDatastore(
             String appName,
             JedisPool jedisPool,
-            ExecutorServiceProvider executorServiceProvider) {
+            boolean cleanerEnabled
+    ) {
+        this(
+                appName,
+                jedisPool,
+                DaemonThreadExecutorServiceProvider.getInstance(),
+                cleanerEnabled,
+                DEFAULT_CLEANER_EXECUTION_INTERVAL_MILLISECONDS
+        );
+    }
+
+    public BaseRedisMetricsDatastore(
+            String appName,
+            JedisPool jedisPool,
+            ExecutorServiceProvider executorServiceProvider
+    ) {
+        this(
+                appName,
+                jedisPool,
+                executorServiceProvider,
+                true,
+                DEFAULT_CLEANER_EXECUTION_INTERVAL_MILLISECONDS
+        );
+    }
+
+    public BaseRedisMetricsDatastore(
+            String appName,
+            JedisPool jedisPool,
+            boolean cleanerEnabled,
+            long cleanerExecutionIntervalMilliseconds
+    ) {
+        this(
+                appName,
+                jedisPool,
+                DaemonThreadExecutorServiceProvider.getInstance(),
+                cleanerEnabled,
+                cleanerExecutionIntervalMilliseconds
+        );
+    }
+
+    public BaseRedisMetricsDatastore(
+            String appName,
+            JedisPool jedisPool,
+            ExecutorServiceProvider executorServiceProvider,
+            boolean cleanerEnabled,
+            long cleanerExecutionIntervalMilliseconds
+    ) {
         this.appName = appName;
         this.jedisPool = jedisPool;
         this.executorServiceProvider = executorServiceProvider;
-        initializeCleanerExecutor();
+        this.cleanerEnabled = cleanerEnabled;
+        this.cleanerExecutionIntervalMilliseconds = cleanerExecutionIntervalMilliseconds;
+        if (this.cleanerEnabled) {
+            this.initializeCleanerExecutor();
+        }
     }
 
     public abstract RateLimitQueue<SUPPLIER, MSG> getRateLimitQueue(String executorName, String teamId);
@@ -50,7 +110,11 @@ public abstract class BaseRedisMetricsDatastore<SUPPLIER, MSG extends QueueMessa
         }
         this.cleanerExecutor = getExecutorServiceProvider().createThreadScheduledExecutor(getThreadGroupName());
         this.cleanerExecutor.scheduleAtFixedRate(
-                new MaintenanceJob(this), 1000, 50, TimeUnit.MILLISECONDS);
+                new MaintenanceJob(this),
+                1000,
+                this.cleanerExecutionIntervalMilliseconds,
+                TimeUnit.MILLISECONDS
+        );
     }
 
     @Override
@@ -71,7 +135,9 @@ public abstract class BaseRedisMetricsDatastore<SUPPLIER, MSG extends QueueMessa
     @Override
     public void setExecutorServiceProvider(ExecutorServiceProvider executorServiceProvider) {
         this.executorServiceProvider = executorServiceProvider;
-        initializeCleanerExecutor();
+        if (cleanerEnabled) {
+            initializeCleanerExecutor();
+        }
     }
 
     private void addToStatsKeyIndices(Jedis jedis, String statsKey) {

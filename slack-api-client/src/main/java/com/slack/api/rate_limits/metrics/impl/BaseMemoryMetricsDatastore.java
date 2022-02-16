@@ -21,18 +21,45 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public abstract class BaseMemoryMetricsDatastore<SUPPLIER, MSG extends QueueMessage> implements MetricsDatastore, AutoCloseable {
 
+    public static long DEFAULT_CLEANER_EXECUTION_INTERVAL_MILLISECONDS = 100L;
+
     private final int numberOfNodes;
     private ExecutorServiceProvider executorServiceProvider;
     private ScheduledExecutorService cleanerExecutor;
+    private boolean cleanerEnabled;
+    private long cleanerExecutionIntervalMilliseconds;
 
     public BaseMemoryMetricsDatastore(int numberOfNodes) {
-        this(numberOfNodes, DaemonThreadExecutorServiceProvider.getInstance());
+        this(
+                numberOfNodes,
+                DaemonThreadExecutorServiceProvider.getInstance(),
+                true,
+                DEFAULT_CLEANER_EXECUTION_INTERVAL_MILLISECONDS
+        );
     }
 
     public BaseMemoryMetricsDatastore(int numberOfNodes, ExecutorServiceProvider executorServiceProvider) {
+        this(
+                numberOfNodes,
+                executorServiceProvider,
+                true,
+                DEFAULT_CLEANER_EXECUTION_INTERVAL_MILLISECONDS
+        );
+    }
+
+    public BaseMemoryMetricsDatastore(
+            int numberOfNodes,
+            ExecutorServiceProvider executorServiceProvider,
+            boolean cleanerEnabled,
+            long cleanerExecutionIntervalMilliseconds
+    ) {
         this.numberOfNodes = numberOfNodes;
         this.executorServiceProvider = executorServiceProvider;
-        initializeCleanerExecutor();
+        this.cleanerEnabled = cleanerEnabled;
+        this.cleanerExecutionIntervalMilliseconds = cleanerExecutionIntervalMilliseconds;
+        if (this.cleanerEnabled) {
+            this.initializeCleanerExecutor();
+        }
     }
 
     protected void initializeCleanerExecutor() {
@@ -42,7 +69,11 @@ public abstract class BaseMemoryMetricsDatastore<SUPPLIER, MSG extends QueueMess
         }
         this.cleanerExecutor = getExecutorServiceProvider().createThreadScheduledExecutor(getThreadGroupName());
         this.cleanerExecutor.scheduleAtFixedRate(
-                new MaintenanceJob(this), 1000, 50, TimeUnit.MILLISECONDS);
+                new MaintenanceJob(this),
+                1000,
+                this.cleanerExecutionIntervalMilliseconds,
+                TimeUnit.MILLISECONDS
+        );
     }
 
     @Override
@@ -94,7 +125,9 @@ public abstract class BaseMemoryMetricsDatastore<SUPPLIER, MSG extends QueueMess
     @Override
     public void setExecutorServiceProvider(ExecutorServiceProvider executorServiceProvider) {
         this.executorServiceProvider = executorServiceProvider;
-        initializeCleanerExecutor();
+        if (this.cleanerEnabled) {
+            initializeCleanerExecutor();
+        }
     }
 
     // -----------------------------------------------------------

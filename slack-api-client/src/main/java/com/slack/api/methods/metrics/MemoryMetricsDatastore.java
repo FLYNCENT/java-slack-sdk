@@ -12,6 +12,15 @@ public class MemoryMetricsDatastore extends BaseMemoryMetricsDatastore<AsyncExec
         super(numberOfNodes, executorServiceProvider);
     }
 
+    public MemoryMetricsDatastore(
+            int numberOfNodes,
+            ExecutorServiceProvider executorServiceProvider,
+            boolean cleanerEnabled,
+            long cleanerExecutionIntervalMilliseconds
+    ) {
+        super(numberOfNodes, executorServiceProvider, cleanerEnabled, cleanerExecutionIntervalMilliseconds);
+    }
+
     public MemoryMetricsDatastore(int numberOfNodes) {
         super(numberOfNodes);
     }
