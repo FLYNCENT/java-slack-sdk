@@ -1671,6 +1671,26 @@ public class AsyncMethodsClientImpl implements AsyncMethodsClient {
     }
 
     @Override
+    public CompletableFuture<FilesGetUploadURLExternalResponse> filesGetUploadURLExternal(FilesGetUploadURLExternalRequest req) {
+        return executor.execute(FILES_GET_UPLOAD_URL_EXTERNAL, toMap(req), () -> methods.filesGetUploadURLExternal(req));
+    }
+
+    @Override
+    public CompletableFuture<FilesGetUploadURLExternalResponse> filesGetUploadURLExternal(RequestConfigurator<FilesGetUploadURLExternalRequest.FilesGetUploadURLExternalRequestBuilder> req) {
+        return filesGetUploadURLExternal(req.configure(FilesGetUploadURLExternalRequest.builder()).build());
+    }
+
+    @Override
+    public CompletableFuture<FilesCompleteUploadExternalResponse> filesCompleteUploadExternal(FilesCompleteUploadExternalRequest req) {
+        return executor.execute(FILES_COMPLETE_UPLOAD_EXTERNAL, toMap(req), () -> methods.filesCompleteUploadExternal(req));
+    }
+
+    @Override
+    public CompletableFuture<FilesCompleteUploadExternalResponse> filesCompleteUploadExternal(RequestConfigurator<FilesCompleteUploadExternalRequest.FilesCompleteUploadExternalRequestBuilder> req) {
+        return filesCompleteUploadExternal(req.configure(FilesCompleteUploadExternalRequest.builder()).build());
+    }
+
+    @Override
     public CompletableFuture<FilesRemoteAddResponse> filesRemoteAdd(FilesRemoteAddRequest req) {
         return executor.execute(FILES_REMOTE_ADD, toMap(req), () -> methods.filesRemoteAdd(req));
     }

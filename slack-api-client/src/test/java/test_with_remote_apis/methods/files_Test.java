@@ -6,10 +6,7 @@ import com.slack.api.methods.SlackApiException;
 import com.slack.api.methods.request.chat.ChatDeleteRequest;
 import com.slack.api.methods.request.chat.ChatPostMessageRequest;
 import com.slack.api.methods.request.chat.ChatUpdateRequest;
-import com.slack.api.methods.request.files.FilesDeleteRequest;
-import com.slack.api.methods.request.files.FilesInfoRequest;
-import com.slack.api.methods.request.files.FilesRevokePublicURLRequest;
-import com.slack.api.methods.request.files.FilesSharedPublicURLRequest;
+import com.slack.api.methods.request.files.*;
 import com.slack.api.methods.response.chat.ChatDeleteResponse;
 import com.slack.api.methods.response.chat.ChatPostMessageResponse;
 import com.slack.api.methods.response.chat.ChatUpdateResponse;
@@ -23,6 +20,8 @@ import com.slack.api.model.ConversationType;
 import config.Constants;
 import config.SlackTestConfig;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.MultipartBody;
+import okhttp3.Response;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -33,6 +32,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -635,4 +635,68 @@ public class files_Test {
         assertThat(replies.getError(), is(nullValue()));
     }
 
+    @Test
+    public void newWayToUploadFiles() throws IOException, SlackApiException {
+        loadRandomChannelId();
+
+        // file 1
+        File file1 = new File("src/test/resources/sample.txt");
+        FilesGetUploadURLExternalResponse file1Upload = slack.methods(botToken).filesGetUploadURLExternal(r -> r
+                .filename("sample.txt")
+                .length(file1.length())
+                .altTxt("alt text")
+                .snippetType("text")
+        );
+        assertThat(file1Upload.getError(), is(nullValue()));
+
+        byte[] bytes1 = Files.readAllBytes(file1.toPath());
+        Response upload1Result = slack.getHttpClient().postMultipart(
+                file1Upload.getUploadUrl(),
+                userToken,
+                new MultipartBody.Builder().addFormDataPart("file", "sample.txt", MultipartBody.create(bytes1)).build()
+        );
+        assertThat(upload1Result.code(), is(200));
+
+        // file 2
+        File file2 = new File("src/test/resources/seratch.jpg");
+        FilesGetUploadURLExternalResponse file2Upload = slack.methods(botToken).filesGetUploadURLExternal(r -> r
+                .filename("sample.jpg")
+                .length(file2.length())
+                .altTxt("alt text 2")
+        );
+        assertThat(file2Upload.getError(), is(nullValue()));
+
+        byte[] bytes2 = Files.readAllBytes(file2.toPath());
+        Response upload2Result = slack.getHttpClient().postMultipart(
+                file2Upload.getUploadUrl(),
+                userToken,
+                new MultipartBody.Builder().addFormDataPart("file", "sample.jpg", MultipartBody.create(bytes2, MultipartBody.FORM)).build()
+        );
+        assertThat(upload2Result.code(), is(200));
+
+        // Complete
+        List<FilesCompleteUploadExternalRequest.FileDetails> files = Arrays.asList(
+                FilesCompleteUploadExternalRequest.FileDetails.builder().id(file1Upload.getFileId()).title("test").build(),
+                FilesCompleteUploadExternalRequest.FileDetails.builder().id(file2Upload.getFileId()).title("test").build()
+        );
+        FilesCompleteUploadExternalResponse completion = slack.methods(botToken).filesCompleteUploadExternal(r -> r
+                .files(files)
+                .channelId(randomChannelId)
+                .initialComment("Here are the uploaded files :wave:")
+        );
+        assertThat(completion.getError(), is(nullValue()));
+
+        FilesInfoResponse file1metadata = slack.methods(botToken).filesInfo(r -> r.file(file1Upload.getFileId()));
+        assertThat(file1metadata.getError(), is(nullValue()));
+        FilesInfoResponse file2metadata = slack.methods(botToken).filesInfo(r -> r.file(file2Upload.getFileId()));
+        assertThat(file2metadata.getError(), is(nullValue()));
+
+        ChatPostMessageResponse sharingFiles = slack.methods(botToken).chatPostMessage(r -> r
+                .channel(randomChannelId)
+                .text("Here are files: " +
+                        file1metadata.getFile().getPermalink() + " " +
+                        file2metadata.getFile().getPermalink())
+        );
+        assertThat(sharingFiles.getError(), is(nullValue()));
+    }
 }

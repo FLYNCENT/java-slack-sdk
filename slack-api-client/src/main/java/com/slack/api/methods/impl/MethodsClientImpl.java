@@ -1937,6 +1937,26 @@ public class MethodsClientImpl implements MethodsClient {
     }
 
     @Override
+    public FilesGetUploadURLExternalResponse filesGetUploadURLExternal(FilesGetUploadURLExternalRequest req) throws IOException, SlackApiException {
+        return postFormWithTokenAndParseResponse(toForm(req), Methods.FILES_GET_UPLOAD_URL_EXTERNAL, getToken(req), FilesGetUploadURLExternalResponse.class);
+    }
+
+    @Override
+    public FilesGetUploadURLExternalResponse filesGetUploadURLExternal(RequestConfigurator<FilesGetUploadURLExternalRequest.FilesGetUploadURLExternalRequestBuilder> req) throws IOException, SlackApiException {
+        return filesGetUploadURLExternal(req.configure(FilesGetUploadURLExternalRequest.builder()).build());
+    }
+
+    @Override
+    public FilesCompleteUploadExternalResponse filesCompleteUploadExternal(FilesCompleteUploadExternalRequest req) throws IOException, SlackApiException {
+        return postFormWithTokenAndParseResponse(toForm(req), Methods.FILES_COMPLETE_UPLOAD_EXTERNAL, getToken(req), FilesCompleteUploadExternalResponse.class);
+    }
+
+    @Override
+    public FilesCompleteUploadExternalResponse filesCompleteUploadExternal(RequestConfigurator<FilesCompleteUploadExternalRequest.FilesCompleteUploadExternalRequestBuilder> req) throws IOException, SlackApiException {
+        return filesCompleteUploadExternal(req.configure(FilesCompleteUploadExternalRequest.builder()).build());
+    }
+
+    @Override
     public FilesCommentsAddResponse filesCommentsAdd(FilesCommentsAddRequest req) throws IOException, SlackApiException {
         return postFormWithTokenAndParseResponse(toForm(req), Methods.FILES_COMMENTS_ADD, getToken(req), FilesCommentsAddResponse.class);
     }
