@@ -59,6 +59,12 @@ public class BlockElements {
         return configurator.configure(TimePickerElement.builder()).build();
     }
 
+    // DatetimePickerElement
+
+    public static DatetimePickerElement datetimePicker(ModelConfigurator<DatetimePickerElement.DatetimePickerElementBuilder> configurator) {
+        return configurator.configure(DatetimePickerElement.builder()).build();
+    }
+
     // ImageElement
 
     public static ImageElement image(ModelConfigurator<ImageElement.ImageElementBuilder> configurator) {

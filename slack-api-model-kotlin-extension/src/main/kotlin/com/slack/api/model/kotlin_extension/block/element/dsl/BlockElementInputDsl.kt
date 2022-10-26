@@ -41,6 +41,12 @@ interface BlockElementInputDsl {
     fun timePicker(builder: TimePickerElementBuilder.() -> Unit)
 
     /**
+     * @see <a href="https://api.slack.com/interactivity/handling">Enabling interactivity guide</a>
+     * @see <a href="https://api.slack.com/reference/block-kit/block-elements#datetimepicker">Date time picker element documentation</a>
+     */
+    fun datetimePicker(builder: DatetimePickerElementBuilder.() -> Unit)
+
+    /**
      * This select menu will load its options from an external data source, allowing for a dynamic list of options.
      *
      * @see <a href="https://api.slack.com/reference/block-kit/block-elements#external_select">External select element documentation</a>
